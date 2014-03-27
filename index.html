@@ -1,0 +1,65 @@
+<html>
+<head></head>
+
+<link rel="stylesheet" href="css/demo.css" type="text/css" media="screen">
+
+<script type="text/javascript" src="lib/jel/jel.js"></script>
+<script data-main="js/main" src="lib/require/require.js"></script>
+
+<script>
+	Jel.fn.init = function(){
+	
+		//Adding shapes to palette
+		var shape1 = new Jel.Shape();
+		shape1.setImage("img/me.gif");
+		Jel.paletteShapes.addShape(shape1);		
+		
+		//Adding shapes to canvas (instead dropping it graphically)
+		instance1 = Jel.Canvas.addShape(shape1);	
+
+		//Setting the xsd file in order to do validation
+		Jel.attachXSD('schema/camel.xsd');
+		
+		var shape2 = new Jel.Shape();
+		shape2.setImage("img/mt.gif");
+		shape2.setPosition(300,200);
+		shape2.setMetaelement('transform');	
+		shape2.setAsComposed();
+		
+		Jel.paletteShapes.addShape(shape2);
+		
+		instance2 = Jel.Canvas.addShape(shape2);
+		
+		var shape3 = new Jel.Shape();
+		shape3.setImage("img/me.gif");
+		shape3.setPosition(100,100);		
+		shape3.setMetaelement('from');
+		
+		Jel.paletteShapes.addShape(shape3);
+		
+		instance3 = Jel.Canvas.addShape(shape3);
+		
+		//Adding connections between shapes (position matters)
+		Jel.Canvas.connect(instance3, instance2);
+		
+		var shape4 = new Jel.Shape();
+		shape4.setImage("img/cmp.gif");
+		Jel.paletteShapes.addShape(shape4);
+		//this element is a composition of different shape
+		shape4.setAsComposed();
+		
+	}
+</script>
+
+<body>
+	<div id="menu"></div>
+	<div id="palette"><h4>Palette</h4></div>
+	<div id="tab"></div>
+	<div id="canvas" ondragover="event.preventDefault()"></div>
+	<div id="properties"></div>
+		
+		<!--<div class="contextMenu" id="contextMenu"><ul><li id="createArrow"><a>createArrow</a></li></ul></div>
+		-->
+	
+</body>
+</html>
