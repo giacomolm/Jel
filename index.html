@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!doctype html>
 <html>
   <head>
@@ -13,100 +12,107 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
+	<link rel="stylesheet" href="css/demo.css" type="text/css" media="screen">
 
-		<link rel="stylesheet" href="css/demo.css" type="text/css" media="screen">
+	<script type="text/javascript" src="lib/jel/jel.js"></script>
+	<script data-main="js/main" src="lib/require/require.js"></script>
 
-		<script type="text/javascript" src="lib/jel/jel.js"></script>
-		<script data-main="js/main" src="lib/require/require.js"></script>
+	<script>
+		Jel.fn.init = function(){
 
-		<script>
-			Jel.fn.init = function(){
-
-				//Setting the xsd file in order to do validation
-				try{
-				  Jel.attachXSD('schema/camel.xsd');
-				}
-				catch(err){
-				  console.log("Problems with http xml request");
-				}
-			
-				//Adding shapes to palette
-				var shape1 = new Jel.Shape();
-				shape1.setImage("img/me.gif");
-				shape1.setName("From");
-				shape1.setMetaelement("from");
-				shape1.setPosition(70,70);		
-				Jel.paletteShapes.addShape(shape1);		
-				
-				//Adding shapes to canvas (instead dropping it graphically)
-				instance1 = Jel.Canvas.addShape(shape1);	
-				
-				var shape2 = new Jel.Shape();
-				shape2.setImage("img/mt.gif");
-				shape2.setName("Translator");
-				shape2.setPosition(240,140);
-				shape2.setMetaelement('transform');	
-				shape2.setAsComposed();
-				
-				Jel.paletteShapes.addShape(shape2);
-				
-				instance2 = Jel.Canvas.addShape(shape2);
-				
-				var shape3 = new Jel.Shape();
-				shape3.setImage("img/me.gif");
-				shape3.setName("To");
-				shape3.setPosition(400,220);
-				shape3.setMetaelement('to');
-				
-				Jel.paletteShapes.addShape(shape3);
-				
-				instance3 = Jel.Canvas.addShape(shape3);
-				
-				//Adding connections between shapes (position matters)
-				Jel.Canvas.connect(instance1, instance2);
-				
-				var shape4 = new Jel.Shape();
-				shape4.setImage("img/cbr.gif");
-				shape4.setName("Router");
-				shape4.setMetaelement('choice');
-				Jel.paletteShapes.addShape(shape4);
-				//this element is a composition of different shape
-				shape4.setAsComposed();
-				
+			//Setting the xsd file in order to do validation
+			try{
+			  Jel.attachXSD('schema/camel.xsd');
 			}
-		</script>
-
+			catch(err){
+			  console.log("Problems with http xml request");
+			}
+		
+			//Adding shapes to palette
+			var shape1 = new Jel.Shape();
+			shape1.setImage("img/me.gif");
+			shape1.setName("From");
+			shape1.setMetaelement("from");
+			shape1.setPosition(70,70);		
+			Jel.paletteShapes.addShape(shape1);		
+			
+			//Adding shapes to canvas (instead dropping it graphically)
+			instance1 = Jel.Canvas.addShape(shape1);	
+			
+			var shape2 = new Jel.Shape();
+			shape2.setImage("img/mt.gif");
+			shape2.setName("Translator");
+			shape2.setPosition(240,140);
+			shape2.setMetaelement('transform');	
+			shape2.setAsComposed();
+			
+			Jel.paletteShapes.addShape(shape2);
+			
+			instance2 = Jel.Canvas.addShape(shape2);
+			
+			var shape3 = new Jel.Shape();
+			shape3.setImage("img/me.gif");
+			shape3.setName("To");
+			shape3.setPosition(400,220);
+			shape3.setMetaelement('to');
+			
+			Jel.paletteShapes.addShape(shape3);
+			
+			instance3 = Jel.Canvas.addShape(shape3);
+			
+			//Adding connections between shapes (position matters)
+			Jel.Canvas.connect(instance1, instance2);
+			
+			var shape4 = new Jel.Shape();
+			shape4.setImage("img/cbr.gif");
+			shape4.setName("Router");
+			shape4.setMetaelement('choice');
+			Jel.paletteShapes.addShape(shape4);
+			//this element is a composition of different shape
+			shape4.setAsComposed();
+			
+		}
+	</script>
+  </head>
 <body>
-
-  <body>
-    <div class="wrapper">
+<div class="wrapper">
       <header>
-        <h1>Jel</h1>
-        <p>Javascript graphical editor that generates DSL</p>
+        <div>
+	        <h1>Jel</h1>
+	        <p>Generate your DSL, graphically.</p>
 
-        <p class="view"><a href="https://github.com/giacomolm/Jel">View the Project on GitHub <small>giacomolm/Jel</small></a></p>
+	        <p class="view"><a href="https://github.com/giacomolm/Jel">View the Project on GitHub <small>giacomolm/Jel</small></a></p>
 
 
-        <ul>
-          <li><a href="https://github.com/giacomolm/Jel/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/giacomolm/Jel/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/giacomolm/Jel">View On <strong>GitHub</strong></a></li>
-        </ul>
+	        <ul>
+	          <li><a href="https://github.com/giacomolm/Jel/zipball/master">Download <strong>ZIP File</strong></a></li>
+	          <li><a href="https://github.com/giacomolm/Jel/tarball/master">Download <strong>TAR Ball</strong></a></li>
+	          <li><a href="https://github.com/giacomolm/Jel">View On <strong>GitHub</strong></a></li>
+	        </ul>
+	        <br><br>
+	        <h3>What you can do with Jel</h3>
+	        <p>Define your own palette</p>
+	        <p>Attach your XSD</p>
+	        <p>Convert into a DSL (based on XML)*</p>
+	        <p>Save/Load your draw*</p>
+	        <p>Live Validation*</p>
+	        <h5>* Partially or Not still supported </h5>
+        </div>
       </header>
       <section>
         <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Javascript graphical Editor that generates dsL</h3>Drag'n drop shapes on left into the canvas
+	<div>
+		<div id="menu"></div><br>
+		<div id="palette"><h4>Palette</h4></div>
+		<div id="tab"></div>
+		<div id="container">
+			<div id="canvas" ondragover="event.preventDefault()"></div>
+			<div id="properties"></div>
+		</div>
+	</div>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>
+<!--<h3>
 <a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
 
 <p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
@@ -124,22 +130,15 @@ $ git checkout gh-pages
 <h3>
 <a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>-->
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/giacomolm">giacomolm</a></p>
         <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
     </div>
-	<div id="menu"></div>
-	<div id="palette"><h4>Palette</h4></div>
-	<div id="tab"></div>
-	<div id="container">
-		<div id="canvas" ondragover="event.preventDefault()"></div>
-		<div id="properties"></div>
-	</div>	
-		<!--<div class="contextMenu" id="contextMenu"><ul><li id="createArrow"><a>createArrow</a></li></ul></div>
-		-->
+
+	    
 	<script src="javascripts/scale.fix.js"></script>
 	
 </body>

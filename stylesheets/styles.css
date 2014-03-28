@@ -46,7 +46,7 @@ a small {
 }
 
 .wrapper {
-  width:860px;
+  width:1024px;
   margin:0 auto;
 }
 
@@ -96,9 +96,16 @@ img {
 }
 
 header {
-  width:270px;
+  width:220px;
+  height : 100%;
   float:left;
-  position:fixed;
+  text-align:center;
+  position: fixed;
+  margin-right: 10px;
+}
+
+header div{
+  vertical-align: middle;
 }
 
 header ul {
@@ -118,11 +125,11 @@ header ul {
   border-radius:5px;
   border:1px solid #d2d2d2;
   box-shadow:inset #fff 0 1px 0, inset rgba(0,0,0,0.03) 0 -1px 0;
-  width:270px;
+  width:220px;
 }
 
 header li {
-  width:89px;
+  width:72px;
   float:left;
   border-right:1px solid #d2d2d2;
   height:40px;
@@ -144,25 +151,32 @@ strong {
 }
 
 header ul li + li {
-  width:88px;
+  width:72px;
   border-left:1px solid #fff;
 }
 
 header ul li + li + li {
   border-right:none;
-  width:89px;
+  width:72px;
 }
 
 header ul a strong {
-  font-size:14px;
+  font-size:13px;
   display:block;
   color:#222;
 }
 
 section {
-  width:500px;
+  width:790px;
   float:right;
   padding-bottom:50px;
+  border-left: 1px solid #E5E5E5;;
+  padding-left: 5px;
+}
+
+section>div{
+  border-top: 1px solid #E5E5E5;;
+  margin-top:20px;
 }
 
 small {
@@ -177,10 +191,10 @@ hr {
 }
 
 footer {
-  width:270px;
+  width:1024px;
   float:left;
-  position:fixed;
   bottom:50px;
+  text-align:center;
 }
 
 @media print, screen and (max-width: 960px) {
@@ -218,7 +232,7 @@ footer {
   }
 }
 
-@media print, screen and (max-width: 720px) {
+/*@media print, screen and (max-width: 720px) {
   body {
     word-wrap:break-word;
   }
@@ -252,4 +266,4 @@ footer {
     font-size:12pt;
     color:#444;
   }
-}
+}*/
