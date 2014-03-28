@@ -20,6 +20,7 @@ body {
 #palette{
 	float:left;
 	width : 125px;
+	font-family: 'Open Sans','Droid Sans',arial,sans-serif;
 }
 
 #palette ul{
@@ -32,16 +33,28 @@ body {
 
 #palette ul{
 	padding : 5px;
-	margin-top : 1px;
+	padding-top : 0px;
 }
 
 #palette li{
 	list-style-type: none;
 	margin-bottom : 10px;
+	font-size : 11px;
+	font-family: "Raleway";
+	text-align: center;
+}
+
+#container{
+	float : left;
 }
 
 #properties{
-	clear:both;
+	font-family: "SQMarket-regular","Helvetica Neue",sans-serif;
+	
+}
+
+#properties li{
+	list-style-type: none;
 }
 
 #props input{
@@ -107,8 +120,8 @@ p {
 }
 
 #menu{
-	font-family : Arial;
-	font-size : 12px;
+	font-family: "Open Sans","Droid Sans",Arial,sans-serif;
+	font-size : 13px;
 }
 
 #menu ul{
@@ -119,7 +132,7 @@ p {
 #menu li{
 	float : left;
 	padding-right : 10px;
-	cursor:pointer
+	cursor:pointer;
 }
 
 div#menu li:hover{
@@ -156,5 +169,23 @@ span.clear{
 	list-style-type: none;
 	float :left;
 	margin-right : 20px;
-	cursor:pointer
+	cursor:pointer;
+	font-size: 12px;
+	font-family: Arial;
+}
+
+.boxclose{
+    float:right;
+    cursor:pointer;
+    color: #fff;
+    border: 1px solid #AEAEAE;
+    border-radius: 15px;
+    background: #605F61;
+    font-size: 11px;
+    display: inline-block;
+    margin-left: 5px;  
+}
+
+.boxclose:before {
+    content: " x ";
 }

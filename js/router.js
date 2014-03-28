@@ -70,10 +70,12 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
       },
       
       changeTab: function(id){	
-	var current = this.canvases[id];
-	//i need to bind the original event handler
-	current.initHandler();
-	this.changeCanvas(current);
+      	//if the current view has an id different      	
+			var current = this.canvases[id];
+			//i need to bind the original event handler
+			current.initHandler();
+			this.changeCanvas(current);
+		
       },
       
        changeCanvas: function (page) {

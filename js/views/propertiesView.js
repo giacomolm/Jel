@@ -4,11 +4,15 @@ define(["jquery", "underscore", "backbone", "ractive", "xsdAttr", "text!template
     var propertiesView = Backbone.View.extend({
 	
 	events :{
-		"change input" : "updateProps"
+		"keyup input" : "updateProps"
 	},
 	    
         initialize: function (shapeId){
 		this.render();
+        },
+
+        updateProps: function(ev){
+        	if(this.model.updateProp) this.model.updateProp(ev.target.name, ev.target.value);
         },		
 	
         render: function (eventName) {

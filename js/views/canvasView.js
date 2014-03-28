@@ -5,7 +5,8 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
     var canvasView = Backbone.View.extend({
 	    
         events : {
-	    'keydown' : 'keydownHandler'
+	    'keydown' : 'keydownHandler',
+	    'drop' : 'dropHandler'
         },
 	
 	template : new Ractive({el : $(this.el), template: template}),
@@ -35,36 +36,40 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		this.render();
         },	
 	
-	initHandler: function(){
-		//defining a custom events dropShape, since we can't bind it directly wih the drop event due the fact we cannot get the current view		
-		$(this.paper.getCanvas()).on('dropShape', {context : this}, this.addShapeOnDrop);
-		
+	initHandler: function(){	
 		//jquery manipulate in a strange way the event object, so we have to pass explicitaly a new parameter containing the data transfer object
-		this.paper.getCanvas().ondrop = function(ev){
-			//the sourceId contains the identifier of the shape that is being dragged
-			var sourceId = ev.dataTransfer.getData("Text");
-			$(this).trigger('dropShape', sourceId);
-			ev.preventDefault();
-		};
+		this.paper.getCanvas().ondrop = this.dropHandler(this); 
 	},
 	
-	//this function is called when a shape is dropped into the canvas. In this case the local context (this) is not the current view, so we have to pass explicitly the context
-	addShapeOnDrop : function(event, sourceId){
-		var context = event.data.context;		
-		var currentShape = context.paletteShapes.at(sourceId);
-		context.addShape(currentShape,context);		
+	//this function is called when a shape is dropped into the canvas. In this case the local context (this) is not the current view, so we have to pass explicitly the context in its definition
+	//the sourceId contains the identifier of the shape that is being dragged
+	dropHandler: function(context){
+		return function(ev){			
+			var sourceId = ev.dataTransfer.getData("Text");
+			var currentShape = context.paletteShapes.at(sourceId);
+			context.addShape(currentShape,context,ev);	
+			ev.preventDefault();
+		}		
 	},
 	
 	//Add a shape to the current canvas. 
 	//parameters: currentContext is not mandatory. It is, when the add action is related to an event
 	//return the current instance of a shape into the canvas
-	addShape: function(shape, currentContext){
+	addShape: function(shape, currentContext,e){
 		var context = currentContext || this;			
+		//if the add shape is triggered by an event
+		if(e){
+			shape.x = e.clientX-context.paper.canvas.getBoundingClientRect().left;
+			shape.y = e.clientY-context.paper.canvas.getBoundingClientRect().top;
+		}
+
 		//drawing the element with raphael	
 		var shapeEl = context.paper.shape(shape.url, shape.x, shape.y, 86, 54, context, context.connectHandler);
 		shapeEl.setDblclick(context.composedHandler);
+
+		var shapeText = context.paper.shapeText(shape.name, shape.x, shape.y, shapeEl, context);
 		
-		var arrow = context.paper.shapeMenu("img/arrow.png", shape.x, shape.y, 21, 25, context, context.onselect);
+		var arrow = context.paper.shapeMenu("img/arrow.png", shape.x, shape.y, 21, 25, 86, context, context.onselect);
 		
 		//setting the related element to el
 		var currentShape = new Shape();
@@ -78,6 +83,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		
 		//Set of all elements related to the current shape
 		shapeEl.elements.push(arrow);						
+		shapeEl.elements.push(shapeText);	
 
 		//set the default graphical element of currentShape
 		currentShape.el = shapeEl;
