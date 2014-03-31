@@ -11,14 +11,14 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	
 	template : new Ractive({el : $(this.el), template: template}),
 	
-        initialize: function (paletteShapes, canvasShapes) {
+        initialize: function (paletteShapes, canvasShapes, connections) {
 		
 		//palette shapes remains the same 
 		this.paletteShapes = paletteShapes;
 		//canvas shapes contains instances of palette shapes, with other attrs like positions
 		this.canvasShapes = canvasShapes;
-		//define a new collection of empty connection between shapes
-		this.connections = new Connections();
+		//connections contains all istances of connections between shapes
+		this.connections = connections;
 		
 		//deininition of the main canvas
 		this.paper = Raphael(this.$el[0], 640, 480);
@@ -98,8 +98,8 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	connect: function(shapeInstance1, shapeInstance2, currentContext){
 		var context = currentContext || this;
 		var connection = new Connection();
-		connection.outbound = shapeInstance1;
-		connection.inbound = shapeInstance2;
+		connection.outbound = shapeInstance1.id;
+		connection.inbound = shapeInstance2.id;
 		connection.el = context.paper.connection(shapeInstance1.el,shapeInstance2.el,"#000");
 		context.connections.add(connection);
 	},
@@ -179,11 +179,11 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	},
 	
 	
-	composedHandler : function(context, target){
-		return function(){
-			Backbone.history.navigate("canvas/"+target.id, {trigger: true});
-		}
-	},
+		composedHandler : function(context, target){
+			return function(){
+				Backbone.history.navigate("canvas/"+target.id, {trigger: true});
+			}
+		},
 	
 
         render: function (eventName) {

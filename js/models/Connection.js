@@ -3,9 +3,9 @@ define(["jquery", "underscore", "backbone"],
     var Connection = Backbone.Model.extend({
       defaults: {
           id: undefined,
-	  inbound : undefined, //inbound element
-	  outbound: undefined, //outbound element
-	  el : undefined //represent the grafical element associated
+          inbound : undefined, //inbound element
+          outbound: undefined, //outbound element
+          el : undefined //represent the grafical element associated
       }
 
       });

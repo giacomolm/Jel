@@ -29,8 +29,8 @@ require.config({
 });
   
 /*Using the javascript module pattern to allow external use*/
-require(['jquery','domReady','underscore','backbone', 'router', 'jel', 'views/paletteView', "views/canvasView", "models/Shape", "collections/Shapes"],
-	    function ($,domReady, _,Backbone, AppRouter, Jel, PaletteView, canvasView, Shape, Shapes) {		    
+require(['jquery','domReady','underscore','backbone', 'router', 'jel', 'views/paletteView', "views/canvasView", "models/Shape", "collections/Shapes", "collections/Connections"],
+	    function ($,domReady, _,Backbone, AppRouter, Jel, PaletteView, canvasView, Shape, Shapes, Connections) {		    
 		
 		    //Setting the default Jel shape model,
 		    Jel.Shape = Shape;
@@ -38,8 +38,10 @@ require(['jquery','domReady','underscore','backbone', 'router', 'jel', 'views/pa
 		    var paletteShapes = Jel.paletteShapes = new Shapes();
 		    //and the default Jel shapes instances, related to canvas
 		    var canvasShapes = Jel.canvasShapes = new Shapes();
+            //setting the default collection of connections between canvas shapes
+            var connections = Jel.connections = new Connections();
 		    //defining the first canvas, the will contains the root elements
-		    var canvas = Jel.Canvas = new canvasView(paletteShapes, canvasShapes);	
+		    var canvas = Jel.Canvas = new canvasView(paletteShapes, canvasShapes, connections);	
 		   
 		    
 		    domReady(function () {
@@ -47,11 +49,11 @@ require(['jquery','domReady','underscore','backbone', 'router', 'jel', 'views/pa
 		    });
 
 		    function run() {	
-						//call the default initialization function
-			Jel.fn.init();       
-			    
-			new AppRouter(paletteShapes,canvasShapes, canvas);
-			Backbone.history.start();
+    			//call the default initialization function
+    			Jel.fn.init();       
+    			    
+    			new AppRouter(paletteShapes,canvasShapes,connections,canvas);
+    			Backbone.history.start();
 		    }
 	});
   
