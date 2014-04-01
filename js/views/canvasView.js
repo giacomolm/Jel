@@ -53,14 +53,14 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	},
 	
 	//Add a shape to the current canvas. 
-	//parameters: currentContext is not mandatory. It is, when the add action is related to an event
+	//parameters: currentContext is not mandatory. It is when the add action is related to an event
 	//return the current instance of a shape into the canvas
 	addShape: function(shape, currentContext,e){
 		var context = currentContext || this;			
 		//if the add shape is triggered by an event
 		if(e){
-			shape.x = e.clientX-context.paper.canvas.getBoundingClientRect().left;
-			shape.y = e.clientY-context.paper.canvas.getBoundingClientRect().top;
+			shape.x = e.layerX;//-context.paper.canvas.getBoundingClientRect().left;
+			shape.y = e.layerY;//-context.paper.canvas.getBoundingClientRect().top;
 		}
 
 		//drawing the element with raphael	
@@ -116,6 +116,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	simulateConnect: function(e){
 		var context = e.data.context;
 		var topShape = context.canvasShapes.pop();
+		//if the current shape a the end of canvas shape is a fake shape
 		if(topShape.id == 0){
 			var fakeShape = topShape;
 			var att = {x: e.clientX-context.el.offsetLeft-2, y: e.clientY-context.el.offsetTop};								
@@ -127,8 +128,8 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		else{
 			var fakeShape = new Shape();
 			fakeShape.id = 0;
-			fakeShape.x = e.clientX-context.paper.canvas.getBoundingClientRect().left;
-			fakeShape.y = e.clientY-context.paper.canvas.getBoundingClientRect().top;
+			fakeShape.x = e.layerX;//clientX-context.paper.canvas.getBoundingClientRect().left;
+			fakeShape.y = e.layerY;//clientY-context.paper.canvas.getBoundingClientRect().top;
 			//the fake image can throw an exception due the missing image url 
 			var fakeEl = context.paper.image(fakeShape, fakeShape.x1, fakeShape.y, 0, 0);
 			fakeShape.el = fakeEl;
@@ -165,7 +166,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	keydownHandler : function (e) {
 		context = e.data.context;
 		switch (e.which) {
-		  case 27 : //case of ESC
+		  case 27 : //case of ESC button
 			if(context.arrowActive.active){
 				//remove the fake connection in connections
 				context.connections.pop().el.remove();

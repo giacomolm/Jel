@@ -43,7 +43,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel","text!te
 		},
 		
 		convert: function(){
-			Jel.convert('xml/camelRoute.xml', 'routes', 'route');
+			Backbone.history.navigate('text', {trigger: true});
 		},
 		
 		save : function(){

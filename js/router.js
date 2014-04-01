@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasView", "jel", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView"],
-    function ($, _,Backbone,Shapes, canvasView, Jel, menuView, paletteView, tabView, propertiesView) {
+define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasView", "jel", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView"],
+    function ($, _,Backbone,Shapes, canvasView, Jel, menuView, paletteView, tabView, propertiesView, dslView) {
 
     var AppRouter = Backbone.Router.extend({
 
@@ -8,6 +8,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 		"props/:id" : "changeProperties",
 		"canvas/:id" : "createCanvas",
 		"tab/:id" : "changeTab",
+		"text": "convert"
       },
 
       initialize: function (paletteShapes, canvasShapes, connections,canvas) {
@@ -35,6 +36,9 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 		this.paletteView =new paletteView(this.paletteShapes);
 		$('#palette').append($(this.paletteView.el));
 		      
+		//adding the default text editor view
+		this.dslView = new dslView();
+		$('#dsl').append($(this.dslView.el));
 		//this.addCustomEvents();
       },
      
@@ -98,13 +102,22 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
       },
       
       changeProperties: function(shapeId){
-	 if(this.currentView == undefined) this.index();
-	 var currentModel = Jel.Canvas.canvasShapes.get(shapeId);
-         if(currentModel) {
-		$('#properties').empty();
-		this.propertiesView = new propertiesView({model : currentModel});
-		$('#properties').append($(this.propertiesView.el));
-	}
+		 if(this.currentView == undefined) this.index();
+		 var currentModel = Jel.Canvas.canvasShapes.get(shapeId);
+	         if(currentModel) {
+			$('#properties').empty();
+			this.propertiesView = new propertiesView({model : currentModel});
+			$('#properties').append($(this.propertiesView.el));
+		}
+      },
+
+      convert: function(){
+      	if(Jel.baseFile && Jel.baseElement){
+      			var conversionRes;
+				if(Jel.wrapper) conversionRes = Jel.convert(Jel.baseFile, Jel.wrapper, Jel.baseElement);
+				else conversionRes = Jel.convert(Jel.baseFile, undefined, Jel.baseElement);
+				this.dslView.setText(conversionRes);
+			}
       }
       
 

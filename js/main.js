@@ -12,7 +12,9 @@ require.config({
     raphael: '../lib/raphael/raphael',
     raphaelext: '../lib/raphael/raphael.ext',
     jel: '../lib/jel/jel',
-    xsdAttr: '../lib/xsdAttr/xsdAttr'
+    xsdAttr: '../lib/xsdAttr/xsdAttr',
+    codemirror: '../lib/codemirror/codemirror',
+    xml: '../lib/codemirror/xml',
   },
   shim: {
     'jquery': {
