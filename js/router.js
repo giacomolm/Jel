@@ -14,7 +14,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
       initialize: function (paletteShapes, canvasShapes, connections,canvas) {
 		this.currentView = undefined;
 
-		this.canvases = [];
+		this.contents = [];
 		
 		//make the user defined shapes as default
 		this.paletteShapes = paletteShapes;
@@ -45,15 +45,17 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
       index: function(){	
       	//if the canvas was specified in the init 
       	if(this.canvas){
-			this.canvases[this.canvas.id] = this.canvas;
-			this.tabView.addTab(this.canvas.id);
-			this.changeCanvas(this.canvas);
+			this.contents[this.canvas.id] = this.canvas;
+			this.tabView.addTab(this.canvas.id, "canvas"+this.tabView.tabs.length);
+			Jel.Canvas = this.canvas;
+			this.changePage(this.canvas);
 		}
 		else{ //create canvas manually
 			this.canvas = new canvasView(this.paletteShapes, this.canvasShapes, this.connections);
-			this.canvases[this.canvas.id] = this.canvas;
-			this.tabView.addTab(this.canvas.id);
-			this.changeCanvas(this.canvas);
+			this.contents[this.canvas.id] = this.canvas;
+			this.tabView.addTab(this.canvas.id, "canvas"+this.tabView.tabs.length);
+			Jel.Canvas = this.canvas;
+			this.changePage(this.canvas);
 		}
       },
       
@@ -71,40 +73,39 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 				if(!currentComposed.shapes) currentComposed.shapes = new Shapes();
 				this.canvas = new canvasView(this.paletteShapes, currentComposed.shapes, this.connections);
 				//add this canvas to the current collection of existing canvas
-				this.canvases[this.canvas.id] = this.canvas;
+				this.contents[this.canvas.id] = this.canvas;
 				
 				currentComposed.canvas = this.canvas.id
-				this.tabView.addTab(this.canvas.id);
-				this.changeCanvas(this.canvas);
+				this.tabView.addTab(this.canvas.id, currentComposed.props.id || "canvas"+this.tabView.tabs.length);
+				Jel.Canvas = this.canvas;
+				this.changePage(this.canvas);
 			}
 			else{
 				//if the element is yet in the tabs, we don't need to create a new tab
 				this.changeTab(currentComposed.canvas);
 			}
 		}
-	//else this.index();
+		//else this.index();
       },
       
       changeTab: function(id){	
       	//if the current view has an id different      	
-			var current = this.canvases[id];
-			//i need to bind the original event handler
+		var current = this.contents[id];
+		//i need to bind the original event handler
+		if(current.initHandler){
 			current.initHandler();
-			this.changeCanvas(current);
+			//NEED a more elegant way of understand the canvas case
+			Jel.Canvas = current;
+		}			
+		this.changePage(current);
 		
       },
       
-       changeCanvas: function (page) {
-        $('#canvas').empty();
-        this.currentView = page;
-		Jel.Canvas = this.currentView;
-        $('#canvas').append($(this.currentView.el));
-      },
-      
       changeProperties: function(shapeId){
-		 if(this.currentView == undefined) this.index();
-		 var currentModel = Jel.Canvas.canvasShapes.get(shapeId);
-	         if(currentModel) {
+      	//if currentView is undefined, it means that we have to create it
+		if(this.currentView == undefined) this.index();
+		var currentModel = Jel.Canvas.canvasShapes.get(shapeId);
+		if(currentModel) {
 			$('#properties').empty();
 			this.propertiesView = new propertiesView({model : currentModel});
 			$('#properties').append($(this.propertiesView.el));
@@ -112,12 +113,30 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
       },
 
       convert: function(){
+      	//Conversion is possible only if the user has defined a basefile and a baseelement
       	if(Jel.baseFile && Jel.baseElement){
-      			var conversionRes;
-				if(Jel.wrapper) conversionRes = Jel.convert(Jel.baseFile, Jel.wrapper, Jel.baseElement);
-				else conversionRes = Jel.convert(Jel.baseFile, undefined, Jel.baseElement);
-				this.dslView.setText(conversionRes);
+			var conversionRes;
+			//Conversion phase: the result of conversion is contained in conversionRes
+			if(Jel.wrapper) conversionRes = Jel.convert(Jel.baseFile, Jel.wrapper, Jel.baseElement);
+			else conversionRes = Jel.convert(Jel.baseFile, undefined, Jel.baseElement);
+			this.dslView.setText(conversionRes);
+			//if it's the first conversion, we need to add the dsl editor to the main div
+			if(!this.contents[this.dslView.id]){
+				this.contents[this.dslView.id] = this.dslView;
+				this.tabView.addTab(this.dslView.id,"result.xml");	
+				this.changePage(this.dslView);			
 			}
+			else this.changeTab(this.dslView.id);
+			//Codemirror doesn't refresh its context after changes, so we do manually
+			this.dslView.refresh();
+				
+		}
+      },
+
+      changePage: function(page){
+      	$('#main').empty();
+        this.currentView = page;		
+        $('#main').append($(this.currentView.el));
       }
       
 

@@ -45,11 +45,16 @@ body {
 }
 
 #container{
-	float : left;
+	margin-left: 125px;
 }
 
 #properties{
 	font-family: "SQMarket-regular","Helvetica Neue",sans-serif;
+	
+}
+
+#properties h5{
+	margin-top: 0;
 	
 }
 
@@ -108,12 +113,12 @@ body {
     border-top: solid 1px #CCC;
 }
 
-#canvas{
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	border: solid 1px #333;
+#main{
+	border: solid 1px #aaa;
 	float : left;
 	margin : 10px;
+	width:600px;
+	height:480px;
 }
 p {
 	text-align: center;
@@ -188,4 +193,8 @@ span.clear{
 
 .boxclose:before {
     content: " x ";
+}
+
+#dsl{
+	display : none;
 }

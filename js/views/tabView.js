@@ -14,8 +14,8 @@ define(["jquery", "underscore", "backbone", "ractive", "text!templates/tab.html"
 		this.render();
         },
 	
-	addTab: function(id){
-		this.tabs[this.tabs.length] = {id : id, name: "canvas"+this.tabs.length};		
+	addTab: function(id, type){
+		this.tabs[this.tabs.length] = {id : id, name: type};		
 		this.render();
 	},
 	

@@ -8,8 +8,9 @@ define(["jquery", "underscore", "backbone", "ractive", "text!templates/dsl.html"
     	},
     	    
         initialize: function(){ 
+            this.id = (new Date()).getTime();
             this.render();
-        },	
+        },
 
         render: function (eventName) {
             this.template = new Ractive({el : $(this.el), template: template});
@@ -29,6 +30,10 @@ define(["jquery", "underscore", "backbone", "ractive", "text!templates/dsl.html"
                 this.editor.indentLine(i, "smart");
             }
         },
+
+        refresh : function(){
+            this.editor.refresh();
+        }
        
       });
 

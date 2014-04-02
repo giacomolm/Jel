@@ -14,8 +14,17 @@ define(["jquery", "underscore", "backbone", "jel"],
 		  name : undefined, //name (alias) associated to the shape
       },
       
-      initialize: function(){
-		
+      initialize: function(shape){
+		if(shape instanceof Shape){
+			this.id = shape.id;
+			this.url = shape.url;
+			this.x = shape.x;
+			this.y = shape.y;
+			this.props = shape.props;
+			this.el = shape.el;
+			this.metaelement = shape.metaelement;
+			this.name = shape.name;
+		}
       },
       
       setImage: function(url){

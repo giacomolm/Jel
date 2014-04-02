@@ -11,7 +11,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	
 	template : new Ractive({el : $(this.el), template: template}),
 	
-        initialize: function (paletteShapes, canvasShapes, connections) {
+    initialize: function (paletteShapes, canvasShapes, connections) {
 		
 		//palette shapes remains the same 
 		this.paletteShapes = paletteShapes;
@@ -34,7 +34,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		this.id = (new Date()).getTime();
 		
 		this.render();
-        },	
+    },	
 	
 	initHandler: function(){	
 		//jquery manipulate in a strange way the event object, so we have to pass explicitaly a new parameter containing the data transfer object
@@ -89,7 +89,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		currentShape.el = shapeEl;
 		currentShape.type = shape.type;
 				
-		context.canvasShapes.add(currentShape);
+		context.canvasShapes.add(currentShape);		
 
 		return currentShape;
 	},
