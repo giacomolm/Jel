@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasView", "jel", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView"],
-    function ($, _,Backbone,Shapes, canvasView, Jel, menuView, paletteView, tabView, propertiesView, dslView) {
+define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasView", "jel", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView"],
+    function ($, _,Backbone,Shapes, canvasView, Jel, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView) {
 
     var AppRouter = Backbone.Router.extend({
 
@@ -28,6 +28,12 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 		//adding the menu interface
 		this.menuView = new menuView();
 		$('#menu').append($(this.menuView.el));
+
+		//initialize the editor dialog
+		this.dialog = new dialogView();
+
+		this.notification = new notificationView();
+		$('#notification').append($(this.notification.el));
 		      
 		this.tabView = new tabView();
 		$('#tab').append($(this.tabView.el));
@@ -120,6 +126,9 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 			if(Jel.wrapper) conversionRes = Jel.convert(Jel.baseFile, Jel.wrapper, Jel.baseElement);
 			else conversionRes = Jel.convert(Jel.baseFile, undefined, Jel.baseElement);
 			this.dslView.setText(conversionRes);
+
+			var validateRes = Jel.validate(conversionRes, Jel.getSchema());
+			this.notification.warning(validateRes);
 			//if it's the first conversion, we need to add the dsl editor to the main div
 			if(!this.contents[this.dslView.id]){
 				this.contents[this.dslView.id] = this.dslView;
@@ -129,6 +138,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 			else this.changeTab(this.dslView.id);
 			//Codemirror doesn't refresh its context after changes, so we do manually
 			this.dslView.refresh();
+			
 				
 		}
       },

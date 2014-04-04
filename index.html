@@ -1,8 +1,9 @@
 <html>
 <head></head>
 
-<link rel="stylesheet" href="css/demo.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/codemirror.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/bootstrap.css" type="text/css" media="screen">
 
 <script type="text/javascript" src="lib/jel/jel.js"></script>
 <script data-main="js/main" src="lib/require/require.js"></script>
@@ -14,6 +15,7 @@
 		try{
 		  Jel.attachXSD('schema/camel.xsd');
 		  Jel.setBaseFile('xml/camelRoute.xml');
+		  Jel.setNamespace('http://camel.apache.org/schema/spring');
 		  Jel.setBaseElement('route');
 		  Jel.setXMLWrapper('routes');
 		}
@@ -70,12 +72,20 @@
 		shape5.setName("Processor");
 		shape5.setMetaelement('process');
 		Jel.paletteShapes.addShape(shape5);
+
+		var shape6 = new Jel.Shape();
+		shape6.setImage("img/mt.gif");
+		shape6.setName("Method");
+		shape6.setMetaelement('method');
+		Jel.paletteShapes.addShape(shape6);
 		
 	}
 </script>
 
 <body>
 	<div id="menu"></div>
+	<div id="dialog"></div>
+	<div id="notification"></div>
 	<div id="palette"><h4>Palette</h4></div>
 	<div id="tab"></div>
 	<div id="container">

@@ -15,6 +15,9 @@ require.config({
     xsdAttr: '../lib/xsdAttr/xsdAttr',
     codemirror: '../lib/codemirror/codemirror',
     xml: '../lib/codemirror/xml',
+    bootstrap: '../lib/bootstrap/bootstrap',
+    bootbox: '../lib/bootbox/bootbox',
+    xmllint: '../lib/xmllint/xmllint'
   },
   shim: {
     'jquery': {
@@ -27,12 +30,15 @@ require.config({
     'ractive': {
         exports: 'ractive'
     },
+    'bootbox': {
+        deps: ['jquery', 'bootstrap'],
+    }
   }
 });
   
 /*Using the javascript module pattern to allow external use*/
-require(['jquery','domReady','underscore','backbone', 'router', 'jel', 'views/paletteView', "views/canvasView", "models/Shape", "collections/Shapes", "collections/Connections"],
-	    function ($,domReady, _,Backbone, AppRouter, Jel, PaletteView, canvasView, Shape, Shapes, Connections) {		    
+require(['jquery','domReady','underscore','backbone', 'xmllint', 'router', 'jel', 'views/paletteView', "views/canvasView", "models/Shape", "collections/Shapes", "collections/Connections"],
+	    function ($,domReady, _,Backbone, xmllint, AppRouter, Jel, PaletteView, canvasView, Shape, Shapes, Connections) {		    
 		
 		    //Setting the default Jel shape model,
 		    Jel.Shape = Shape;
@@ -44,6 +50,9 @@ require(['jquery','domReady','underscore','backbone', 'router', 'jel', 'views/pa
             var connections = Jel.connections = new Connections();
 		    //defining the first canvas, the will contains the root elements
 		    var canvas = Jel.Canvas = new canvasView(paletteShapes, canvasShapes, connections);	
+
+            //initiliaze the validation function
+            Jel.validate = xmllint.validateXML;
 		   
 		    
 		    domReady(function () {
