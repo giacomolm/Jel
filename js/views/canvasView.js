@@ -37,8 +37,9 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
     },	
 	
 	initHandler: function(){	
-		//jquery manipulate in a strange way the event object, so we have to pass explicitaly a new parameter containing the data transfer object
-		this.paper.getCanvas().ondrop = this.dropHandler(this); 
+		//jquery manipulate in a strange way the event object, so we have to pass explicitaly a new parameter containing the data transfer object		
+		//this.paper.getCanvas().ondrop = this.dropHandler(this);  IE not compliant
+		this.paper.getCanvas().addEventListener('drop', this.dropHandler(this));
 	},
 	
 	//this function is called when a shape is dropped into the canvas. In this case the local context (this) is not the current view, so we have to pass explicitly the context in its definition
@@ -62,7 +63,6 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 			shape.x = e.layerX;//-context.paper.canvas.getBoundingClientRect().left;
 			shape.y = e.layerY;//-context.paper.canvas.getBoundingClientRect().top;
 		}
-
 		//drawing the element with raphael	
 		var shapeEl = context.paper.shape(shape.url, shape.x, shape.y, 86, 54, context, context.connectHandler);
 		shapeEl.setDblclick(context.composedHandler);
