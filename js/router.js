@@ -12,6 +12,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
       },
 
       initialize: function (paletteShapes, canvasShapes, connections,canvas) {
+      	//currentView will contain main views of the application: in this case are canvas and dslTextEditor
 		this.currentView = undefined;
 
 		this.contents = [];
@@ -144,7 +145,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 
       changePage: function(page){
       	$('#main').empty();
-        this.currentView = page;		
+        this.currentView = page;
         $('#main').append($(this.currentView.el));
       }
       

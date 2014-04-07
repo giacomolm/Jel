@@ -15,7 +15,7 @@ define(["jquery", "underscore", "backbone", "ractive", "views/tabItemView", "tex
         },
 	
 		addTab: function(id, type){
-			this.tabs[id] = {id: id, name: type};		
+			this.tabs[id] = {id: id, name: type};
 			this.render();
 		},
 		
@@ -26,6 +26,7 @@ define(["jquery", "underscore", "backbone", "ractive", "views/tabItemView", "tex
 
 		closeTab: function(ev,tab){
 			delete ev.data.context.tabs[tab.id];
+			//Backbone.history.navigate('tab/'+latest, {trigger: true});
 		},
 
         render: function (eventName) {
