@@ -30,6 +30,9 @@ require.config({
     'ractive': {
         exports: 'ractive'
     },
+    'bootstrap': {
+        deps: ['jquery'],
+    },
     'bootbox': {
         deps: ['jquery', 'bootstrap'],
     }

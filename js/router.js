@@ -80,7 +80,6 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 				this.canvas = new canvasView(this.paletteShapes, currentComposed.shapes, this.connections);
 				//add this canvas to the current collection of existing canvas
 				this.contents[this.canvas.id] = this.canvas;
-				
 				currentComposed.canvas = this.canvas.id
 				this.tabView.addTab(this.canvas.id, currentComposed.props.id || "canvas"+this.tabView.tabs.length);
 				Jel.Canvas = this.canvas;
@@ -100,7 +99,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 		//i need to bind the original event handler
 		if(current.initHandler){
 			current.initHandler();
-			//NEED a more elegant way of understand the canvas case
+			//NEED a more elegant way of understand the canvas case.. typeOF?
 			Jel.Canvas = current;
 		}			
 		this.changePage(current);

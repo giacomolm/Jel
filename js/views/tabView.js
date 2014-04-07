@@ -1,38 +1,42 @@
-define(["jquery", "underscore", "backbone", "ractive", "text!templates/tab.html"],
-    function ($, _, Backbone, Ractive, template) {
+define(["jquery", "underscore", "backbone", "ractive", "views/tabItemView", "text!templates/tab.html"],
+    function ($, _, Backbone, Ractive, tabItemView, template) {
 
     var tabView = Backbone.View.extend({
 	   
 	tagName : "ul",
 	    
         events : {
-            "click" : "changeTab"
+        	
         },	
 	
         initialize: function (){	
-		this.tabs = [];
-		this.render();
+			this.tabs = new Array();
+			this.render();
         },
 	
-	addTab: function(id, type){
-		this.tabs[this.tabs.length] = {id : id, name: type};		
-		this.render();
-	},
-	
-	inTab : function(id){		
-		for(i=0; i<this.tabs.length; i++){
-			if(this.tabs[i].id == id) return true;
-		}
-		return false;
-	},
-	
-	changeTab: function(ev){
-		Backbone.history.navigate('tab/'+ev.target.id, {trigger: true});
-	},
+		addTab: function(id, type){
+			this.tabs[id] = {id: id, name: type};		
+			this.render();
+		},
+		
+		inTab : function(id){		
+			if(this.tabs[id]) return true;
+			else return false;
+		},
+
+		closeTab: function(ev,tab){
+			delete ev.data.context.tabs[tab.id];
+		},
 
         render: function (eventName) {
-	    this.template = new Ractive({el : $(this.el), template: template, data : this});
-	    return this;
+		    this.template = new Ractive({el : $(this.el), template: template});
+
+		    for(id in this.tabs){
+		    	var subView = (new tabItemView({model: this.tabs[id]}));
+		    	$(subView).on("removed", {context : this}, this.closeTab);
+			    $(this.el).append(subView.render().el);
+			}
+	    	return this;
         }
        
       });

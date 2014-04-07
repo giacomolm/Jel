@@ -25,6 +25,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		
 		//init canvas event handler, like dropping events
 		this.initHandler();
+		this.paper.getCanvas().addEventListener('drop', this.dropHandler(this));
 		
 		//The editor should be able to attach shapes graphically. Thie active flag is set to true when there is an attempt of attach elements
 		this.arrowActive = { active : false, source : null};
@@ -32,14 +33,24 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		$(document).on('keydown', {context:this}, this.keydownHandler);
 		
 		this.id = (new Date()).getTime();
-		
+
+		//if canvasShapes is not empty, we have to initialize the canvas with existing shapes
+		var i;
+		for(i=0; i<this.canvasShapes.length; i++){
+			//updating the latest position 
+			this.canvasShapes.at(i).x = this.canvasShapes.at(i).el.attrs['x'];
+			this.canvasShapes.at(i).y = this.canvasShapes.at(i).el.attrs['y'];
+			//getting the new canvas element
+			this.canvasShapes.at(i).el = this.drawShape(this.canvasShapes.at(i), this.canvasShapes.at(i).id, this);			
+		}
+		this.drawConnections();
 		this.render();
     },	
 	
-	initHandler: function(){	
+	initHandler: function(){//TO DELETE: with addevent listener, the event remains attached
 		//jquery manipulate in a strange way the event object, so we have to pass explicitaly a new parameter containing the data transfer object		
 		//this.paper.getCanvas().ondrop = this.dropHandler(this);  IE not compliant
-		this.paper.getCanvas().addEventListener('drop', this.dropHandler(this));
+		//this.paper.getCanvas().addEventListener('drop', this.dropHandler(this));
 	},
 	
 	//this function is called when a shape is dropped into the canvas. In this case the local context (this) is not the current view, so we have to pass explicitly the context in its definition
@@ -63,13 +74,6 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 			shape.x = e.layerX;//-context.paper.canvas.getBoundingClientRect().left;
 			shape.y = e.layerY;//-context.paper.canvas.getBoundingClientRect().top;
 		}
-		//drawing the element with raphael	
-		var shapeEl = context.paper.shape(shape.url, shape.x, shape.y, 86, 54, context, context.connectHandler);
-		shapeEl.setDblclick(context.composedHandler);
-
-		var shapeText = context.paper.shapeText(shape.name, shape.x, shape.y, shapeEl, context);
-		
-		var arrow = context.paper.shapeMenu("img/arrow.png", shape.x, shape.y, 21, 25, 86, context, context.onselect);
 		
 		//setting the related element to el
 		var currentShape = new Shape();
@@ -77,21 +81,60 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		currentShape.id = (new Date()).getTime();
 		if(shape.metaelement) currentShape.setMetaelement(shape.metaelement);
 		
-		//the same id must occur in the child elements
-		shapeEl.id = currentShape.id;
-		arrow.id = currentShape.id;
-		
-		//Set of all elements related to the current shape
-		shapeEl.elements.push(arrow);						
-		shapeEl.elements.push(shapeText);	
+		//drawing the element with raphael	
+		var shapeEl = context.drawShape(shape, currentShape.id, context);
 
 		//set the default graphical element of currentShape
 		currentShape.el = shapeEl;
+		currentShape.x = shapeEl.attrs['x'];
+		currentShape.y = shapeEl.attrs['y'];
+		currentShape.url = shape.url;
 		currentShape.type = shape.type;
+		currentShape.name = shape.name;
+		currentShape.props['id'] = shape.props['id'];
 				
 		context.canvasShapes.add(currentShape);		
 
 		return currentShape;
+	},
+
+	/* 	draw a shape element into the canvas
+		shape is a type of Shape and contains all information to build the element
+		id refers to the parente element, that will contain the shape element we're creating
+		context refers to the current canvas element containing elements
+	*/
+	drawShape: function(shape, id, context){
+		//creating the canvas shape element
+		var shapeEl = context.paper.shape(shape.url, shape.x, shape.y, 86, 54, context, context.connectHandler);
+		shapeEl.id = id;
+		shapeEl.setDblclick(context.composedHandler);
+		//shape text related to canvas element
+		var shapeText = context.paper.shapeText(shape.name, shape.x, shape.y, shapeEl, context);
+		shapeText.id = id;
+		//$(shapeEl).trigger("propsChanged", ["id", shape.props.id]);
+
+		var arrow = context.paper.shapeMenu("img/arrow.png", shape.x, shape.y, 21, 25, 86, context, context.onselect);
+		arrow.id = id;
+
+		//Set of all elements related to the current shape
+		shapeEl.elements.push(arrow);						
+		shapeEl.elements.push(shapeText);	
+
+		return shapeEl;
+	},
+
+	/*drawConnection is executed when an existing shape element is explored: it draws connnections
+	  between elements of the current canvas.
+	*/
+	drawConnections: function(){
+		var i,j;
+		for(i=0; i<this.canvasShapes.length; i++){
+			for(j=0; j<this.connections.length; j++){
+				//replacing the old graphical connection element with the new one
+				if(this.connections.at(j).outbound == this.canvasShapes.at(i).id)					
+					this.connections.at(j).el = this.paper.connection(this.canvasShapes.get(this.connections.at(j).outbound).el,this.canvasShapes.get(this.connections.at(j).inbound).el,"#000");
+			}
+		}
 	},
 	
 	//currentContext is not mandatory. It is when the action is performed with an event
