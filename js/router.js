@@ -28,7 +28,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 		this.canvas = canvas;
 		      
 		//adding the menu interface
-		this.menuView = new menuView(this.paletteShapes);
+		this.menuView = new menuView(this.canvasShapes, this.connections);
 		$('#menu').append($(this.menuView.el));
 
 		//initialize the editor dialog

@@ -15,10 +15,12 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel","text!te
 		    "click .openOpt" : "openFile"
         },	
 	
-        initialize: function (shapes){
+        initialize: function (shapes, connections){
         	this.reader = new FileReader();
         	this.reader.onload = this.readerHandler(this);
-			this.render();
+		this.shapes = shapes;
+		this.connections = connections;
+		this.render();
         },	
 	
 		showFileOpt: function(){
@@ -59,7 +61,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel","text!te
 		readerHandler:function(context){
 			return function(){
 				//here we can call the load method
-				console.log(context.result);
+				console.log(JSON.parse(context.reader.result)[0]["shapes"]);
 			};
 		},
 		

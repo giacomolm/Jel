@@ -14,9 +14,11 @@ define(["jquery", "underscore", "backbone", "ractive", "bootbox", "filesaver", "
         },
 
         file: function(shapes, connections){
-            console.log(shapes.toJSON());
-            var json = JSON.stringify(shapes.toJSON()),
-                blob = new Blob([json], {type: "text/json"});
+	    /*var result = new Object();
+	    result["shapes"] = shapes.toJSON();
+	    result["connections"] = connections.toJSON();*/	
+            var json = "[{\"shapes\" : "+JSON.stringify(shapes.toJSON())+", \"connections\" : "+JSON.stringify(connections.toJSON())+"}]";//JSON.stringify(JSON.stringify(result)),
+		  blob = new Blob([json], {type: "application/json"});
             saveAs(blob, "result.json");
         },
 
