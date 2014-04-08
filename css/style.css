@@ -162,6 +162,12 @@ div#menu li:hover{
 	cursor:pointer
 }
 
+#openOpt input{
+	display : none;
+}
+
+
+
 span.clear{
 	clear: left; display: block;
 }

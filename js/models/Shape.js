@@ -29,6 +29,7 @@ define(["jquery", "underscore", "backbone", "jel"],
       
       setImage: function(url){
 		this.url = url;
+		this.set("url", url);
       },
       
       setProperties: function(){
@@ -72,7 +73,28 @@ define(["jquery", "underscore", "backbone", "jel"],
       	this.props[propName] = propValue;
 
       	$(this.el).trigger("propsChanged",[propName, propValue]);
-      }
+      },
+
+      //Exporting raw object
+      //see here http://stackoverflow.com/questions/10262498/backbone-model-tojson-doesnt-render-all-attributes-to-json
+    	toJSON: function(options) {
+    	  var shape = new Object();
+    	  shape.id = this.id;
+    	  shape.id = shape.id;
+		  shape.url = this.url;
+		  shape.x = this.x;
+		  shape.y = this.y;
+		  shape.props = this.props;
+		  shape.metaelement = this.metaelement;
+		  shape.name = this.name;
+		  if(this.shapes){
+		  	var i;
+		  	shape.shapes = new Array(this.shapes.length);
+		  	for(i=0; i<this.shapes.length; i++)
+		  		shape.shapes[i] = this.shapes.at(i).toJSON(); 
+		  }
+		  return _.clone(shape);
+		}
 
       });
 

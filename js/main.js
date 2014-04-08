@@ -17,7 +17,8 @@ require.config({
     xml: '../lib/codemirror/xml',
     bootstrap: '../lib/bootstrap/bootstrap',
     bootbox: '../lib/bootbox/bootbox',
-    xmllint: '../lib/xmllint/xmllint'
+    xmllint: '../lib/xmllint/xmllint',
+    filesaver: '../lib/filesaver/filesaver'
   },
   shim: {
     'jquery': {

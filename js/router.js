@@ -8,7 +8,8 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 		"props/:id" : "changeProperties",
 		"canvas/:id" : "createCanvas",
 		"tab/:id" : "changeTab",
-		"text": "convert"
+		"text": "convert",
+		"save": "saveFile"
       },
 
       initialize: function (paletteShapes, canvasShapes, connections,canvas) {
@@ -27,7 +28,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 		this.canvas = canvas;
 		      
 		//adding the menu interface
-		this.menuView = new menuView();
+		this.menuView = new menuView(this.paletteShapes);
 		$('#menu').append($(this.menuView.el));
 
 		//initialize the editor dialog
@@ -141,6 +142,10 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 			
 				
 		}
+      },
+
+      saveFile: function(){
+      	this.dialog.file(this.canvasShapes, this.connections);
       },
 
       changePage: function(page){

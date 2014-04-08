@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "ractive", "bootbox", "text!templates/dialog.html"],
-        function ($, _, Backbone, Ractive, bootbox, template) {
+define(["jquery", "underscore", "backbone", "ractive", "bootbox", "filesaver", "text!templates/dialog.html"],
+        function ($, _, Backbone, Ractive, bootbox, filesaver, template) {
 
     var dialogView = Backbone.View.extend({
     	
@@ -9,17 +9,15 @@ define(["jquery", "underscore", "backbone", "ractive", "bootbox", "text!template
     	    
         initialize: function (){
             //we need a smarter way to bind the event
-            $("#saveOpt").on("click", this.file(this));
+            //$("#saveOpt").on("click", this.file(this));
             this.render();
         },
 
-        file: function(context){
-            return function (){
-
-              bootbox.alert(template);/*, function() {
-                console.log("Alert Callback", template);
-             });*/
-            }
+        file: function(shapes, connections){
+            console.log(shapes.toJSON());
+            var json = JSON.stringify(shapes.toJSON()),
+                blob = new Blob([json], {type: "text/json"});
+            saveAs(blob, "result.json");
         },
 
         render: function (eventName) {
