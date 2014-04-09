@@ -1,4 +1,4 @@
-define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel","text!templates/menu.html"],
+define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!templates/menu.html"],
     function ($, _, Backbone, Ractive, Raphael, Jel, template) {
 
     var menuView = Backbone.View.extend({
@@ -18,9 +18,9 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel","text!te
         initialize: function (shapes, connections){
         	this.reader = new FileReader();
         	this.reader.onload = this.readerHandler(this);
-		this.shapes = shapes;
-		this.connections = connections;
-		this.render();
+			this.shapes = shapes;
+			this.connections = connections;
+			this.render();
         },	
 	
 		showFileOpt: function(){
@@ -60,8 +60,9 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel","text!te
 
 		readerHandler:function(context){
 			return function(){
-				//here we can call the load method
-				console.log(JSON.parse(context.reader.result)[0]["shapes"]);
+				//Here we convert the loaded object
+				Jel.input = JSON.parse(context.reader.result)[0];
+				Backbone.history.navigate('load', {trigger: true});
 			};
 		},
 		

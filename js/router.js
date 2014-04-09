@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasView", "jel", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView"],
-    function ($, _,Backbone,Shapes, canvasView, Jel, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView) {
+define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/Connections","views/canvasView", "jel", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView"],
+    function ($, _,Backbone,Shapes, Connections, canvasView, Jel, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView) {
 
     var AppRouter = Backbone.Router.extend({
 
@@ -9,7 +9,8 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 		"canvas/:id" : "createCanvas",
 		"tab/:id" : "changeTab",
 		"text": "convert",
-		"save": "saveFile"
+		"save": "saveFile",
+		"load": "load"
       },
 
       initialize: function (paletteShapes, canvasShapes, connections,canvas) {
@@ -78,6 +79,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 		var currentComposed = this.currentView.canvasShapes.get(id); //i need to get the shape from the previous canvas, where the composed shape is placed on 
 		if(currentComposed && currentComposed.isComposed()){	
 			if(!this.tabView.inTab(currentComposed.canvas)){
+				//if the current shapes properties is empty, i have to initialize it with a new Collection of Shapes
 				if(!currentComposed.shapes) currentComposed.shapes = new Shapes();
 				this.canvas = new canvasView(this.paletteShapes, currentComposed.shapes, this.connections);
 				//add this canvas to the current collection of existing canvas
@@ -100,10 +102,11 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 		var current = this.contents[id];
 		//i need to bind the original event handler
 		if(current.initHandler){
-			current.initHandler();
+			current.initHandler();//deprecated
 			//NEED a more elegant way of understand the canvas case.. typeOF?
 			Jel.Canvas = current;
-		}			
+		}
+		this.tabView.changeTab(id);
 		this.changePage(current);
 		
       },
@@ -146,6 +149,25 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "views/canvasV
 
       saveFile: function(){
       	this.dialog.file(this.canvasShapes, this.connections);
+      },
+
+      load: function(){
+      	//Jel.input contains the object obtained in the loading phase
+      	if(Jel.input){
+			var currentShapes = Jel.input["shapes"];
+			var currentConnections = Jel.input["connections"];
+
+			var shapes = new Shapes();
+			shapes.createShapes(currentShapes);
+			var connections = new Connections();
+			connections.createConnections(currentConnections);
+
+			//re-estabilsh the new canvas shapes and connection
+			this.canvasShapes = Jel.canvasShapes = shapes;
+			this.connections = Jel.connections =connections;
+	      	this.canvas = undefined;
+	      	this.index();
+	    }
       },
 
       changePage: function(page){

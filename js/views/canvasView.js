@@ -37,11 +37,14 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		//if canvasShapes is not empty, we have to initialize the canvas with existing shapes
 		var i;
 		for(i=0; i<this.canvasShapes.length; i++){
-			//updating the latest position 
-			this.canvasShapes.at(i).x = this.canvasShapes.at(i).el.attrs['x'];
-			this.canvasShapes.at(i).y = this.canvasShapes.at(i).el.attrs['y'];
-			//getting the new canvas element
+			//the element is yet provided of an el attribute, so we have to refresh its position
+			if(this.canvasShapes.at(i).el){
+				//updating the latest position 
+				this.canvasShapes.at(i).x = this.canvasShapes.at(i).el.attrs['x'];
+				this.canvasShapes.at(i).y = this.canvasShapes.at(i).el.attrs['y'];
+			}
 			this.canvasShapes.at(i).el = this.drawShape(this.canvasShapes.at(i), this.canvasShapes.at(i).id, this);			
+
 		}
 		this.drawConnections();
 		this.render();
@@ -132,7 +135,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		for(i=0; i<this.canvasShapes.length; i++){
 			for(j=0; j<this.connections.length; j++){
 				//replacing the old graphical connection element with the new one
-				if(this.connections.at(j).outbound == this.canvasShapes.at(i).id)					
+				if((this.connections.at(j).outbound == this.canvasShapes.at(i).id) &&(this.canvasShapes.get(this.connections.at(j).outbound).el))
 					this.connections.at(j).el = this.paper.connection(this.canvasShapes.get(this.connections.at(j).outbound).el,this.canvasShapes.get(this.connections.at(j).inbound).el,"#000");
 			}
 		}

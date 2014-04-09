@@ -26,14 +26,28 @@ define(["jquery", "underscore", "backbone", "jel"],
 			this.name = shape.name;
 		}
       },
+
+      setId: function(id){
+      	this.id = id;
+      },
       
       setImage: function(url){
 		this.url = url;
-		this.set("url", url);
+		//this.set("url", url);
       },
       
-      setProperties: function(){
-
+      setProperties: function(props){
+      	if(props) this.props = _.clone(props);
+		else if(Jel.xsdFile){		
+				var result= xsdAttr.getAttributes(Jel.xsdFile,this.metaelement);
+				this.props = new Object();
+				for(var propName in result) {
+				    if(result.hasOwnProperty(propName)) {
+					//define its value as an empty string
+					this.props[propName] = '';   
+				    }
+				}
+			}
       },
       
       setPosition: function(x,y){
@@ -44,22 +58,17 @@ define(["jquery", "underscore", "backbone", "jel"],
       //element is a string
       setMetaelement: function(element){
 		this.metaelement = element;
-		if(Jel.xsdFile){		
-			var result= xsdAttr.getAttributes(Jel.xsdFile,this.metaelement);
-			this.props = new Object();
-			for(var propName in result) {
-			    if(result.hasOwnProperty(propName)) {
-				//define its value as an empty string
-				this.props[propName] = '';   
-			    }
-			}
-		}
+		this.setProperties();
       },
 
       setName: function(name){
       	this.name = name;
       },
       
+      setType: function(type){
+      	this.type = type;
+      },
+
       setAsComposed: function(){
 		this.type = "composed";
       },
@@ -82,11 +91,18 @@ define(["jquery", "underscore", "backbone", "jel"],
     	  shape.id = this.id;
     	  shape.id = shape.id;
 		  shape.url = this.url;
-		  shape.x = this.x;
-		  shape.y = this.y;
+		  if(this.el){
+		  	shape.x = this.el.attrs["x"];
+		  	shape.y = this.el.attrs["y"];
+		  }
+		  else{
+			  shape.x = this.x;
+			  shape.y = this.y;
+		  }
 		  shape.props = this.props;
 		  shape.metaelement = this.metaelement;
 		  shape.name = this.name;
+		  shape.type = this.type;
 		  if(this.shapes){
 		  	var i;
 		  	shape.shapes = new Array(this.shapes.length);
