@@ -8,6 +8,10 @@ define(["jquery", "underscore", "backbone"],
           el : undefined //represent the grafical element associated
       },
       
+      initialize: function(){
+
+      },
+
       setId: function(id){
         this.id = id
       },

@@ -20,7 +20,6 @@ define(["jquery", "underscore", "backbone", "ractive", "views/tabItemView", "tex
 		addTab: function(id, type){
 			this.tabs[id] = {id: id, name: type};
 			this.history.unshift(parseInt(id));
-			console.log(this.history);
 			this.render();
 		},
 		
@@ -44,7 +43,6 @@ define(["jquery", "underscore", "backbone", "ractive", "views/tabItemView", "tex
 				}
 				if(trovato) this.history[0] = id;
 			}
-			console.log(this.history);
 		},
 
 		closeTab: function(ev,tab){

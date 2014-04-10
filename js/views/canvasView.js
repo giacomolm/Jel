@@ -47,6 +47,9 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 
 		}
 		this.drawConnections();
+
+		this.paper.getCanvas().addEventListener('click', this.cleanCanvas(this));
+
 		this.render();
     },	
 	
@@ -119,10 +122,13 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 
 		var arrow = context.paper.shapeMenu("img/arrow.png", shape.x, shape.y, 21, 25, 86, context, context.onselect);
 		arrow.id = id;
+		var del = context.paper.shapeMenu("img/delete.png", shape.x, shape.y, 21, 25, 86, context, context.deleteShape,-25,-18);
+		del.id = id;
 
 		//Set of all elements related to the current shape
 		shapeEl.elements.push(arrow);						
 		shapeEl.elements.push(shapeText);	
+		shapeEl.elements.push(del);
 
 		return shapeEl;
 	},
@@ -148,6 +154,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		connection.outbound = shapeInstance1.id;
 		connection.inbound = shapeInstance2.id;
 		connection.el = context.paper.connection(shapeInstance1.el,shapeInstance2.el,"#000");
+		$(connection.el).on("moving", context.detachArrow(context));
 		context.connections.add(connection);
 	},
 	
@@ -160,7 +167,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		}
 	},
 	
-	simulateConnect: function(e){
+	simulateConnect: function(e, clientX, clientY){
 		var context = e.data.context;
 		var topShape = context.canvasShapes.pop();
 		//if the current shape a the end of canvas shape is a fake shape
@@ -175,10 +182,11 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		else{
 			var fakeShape = new Shape();
 			fakeShape.id = 0;
-			fakeShape.x = e.layerX;//clientX-context.paper.canvas.getBoundingClientRect().left;
-			fakeShape.y = e.layerY;//clientY-context.paper.canvas.getBoundingClientRect().top;
+			//console.log(clientX+context.paper.canvas.getBoundingClientRect().left, e.layerX);
+			fakeShape.x = e.layerX || clientX-200;
+			fakeShape.y = e.layerY || clientY-context.paper.canvas.getBoundingClientRect().top/3;
 			//the fake image can throw an exception due the missing image url 
-			var fakeEl = context.paper.image(fakeShape, fakeShape.x1, fakeShape.y, 0, 0);
+			var fakeEl = context.paper.image(fakeShape, fakeShape.x, fakeShape.y, 0, 0);
 			fakeShape.el = fakeEl;
 			//push the non fake element previously popped
 			context.canvasShapes.push(topShape);					
@@ -191,7 +199,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	
 	//Since the mousedown event of rafael doesn't support parameters, we have to wrap the function that defines locally the desiderd parameter
 	connectHandler : function(context,target){	
-		return function(){			
+		return function(e){			
 			if(context.arrowActive.active){
 				//eliminate the current fake connection
 				context.connections.pop().el.remove();
@@ -210,29 +218,63 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		}
 	},
 	
-	keydownHandler : function (e) {
-		context = e.data.context;
-		switch (e.which) {
-		  case 27 : //case of ESC button
-			if(context.arrowActive.active){
-				//remove the fake connection in connections
-				context.connections.pop().el.remove();
-				//remove the fake element in the canvasShape collections
-				context.canvasShapes.pop();
-				$(context.paper.getCanvas()).off("mousemove", context.simulateConnect);
-				context.arrowActive.active = false;
+		keydownHandler : function (e) {
+			context = e.data.context;
+			switch (e.which) {
+			  case 27 : //case of ESC button
+				if(context.arrowActive.active){
+					//remove the fake connection in connections
+					context.connections.pop().el.remove();
+					//remove the fake element in the canvasShape collections
+					context.canvasShapes.pop();
+					$(context.paper.getCanvas()).off("mousemove", context.simulateConnect);
+					context.arrowActive.active = false;
+				}
+			  break;
 			}
-		  break;
-		}
-	},
-	
-	
+		},
+
+		deleteShape: function(context){
+			return function(e){
+				Backbone.history.navigate("deleteShape/"+this.id, {trigger: true});
+			}
+		},
+		
 		composedHandler : function(context, target){
 			return function(){
 				Backbone.history.navigate("canvas/"+target.id, {trigger: true});
 			}
 		},
-	
+		
+		detachArrow: function(context){
+			return function(e, clientX, clientY){
+				context.arrowActive.source = this.from.id;
+				context.arrowActive.active = true;
+				$(context.paper.getCanvas()).one("mousemove",{context : context, el : this}, function(event){event.data.context.deleteConnection(event.data.el.from.id, event.data.el.to.id, event.data.context);});
+				$(context.paper.getCanvas()).on("mousemove",{context : context}, context.simulateConnect);
+				
+				//context.deleteConnection(this.from.id, this.to.id, context);
+			}
+		},
+
+		deleteConnection: function(from, to, context){
+			for(i=0; i<context.connections.length; i++){
+				if(context.connections.at(i).inbound == to && context.connections.at(i).outbound == from){
+					context.connections.at(i).el.remove();
+				}
+			}
+		},
+
+		cleanCanvas: function(context){
+			return function(){
+				var i;
+				for(i=0; i<context.canvasShapes.length; i++){
+					if(context.canvasShapes.at(i).el){
+						context.canvasShapes.at(i).el.menu.hide();
+					}
+				};
+			}
+		},
 
         render: function (eventName) {
 	    return this;

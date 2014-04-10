@@ -10,7 +10,8 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		"tab/:id" : "changeTab",
 		"text": "convert",
 		"save": "saveFile",
-		"load": "load"
+		"load": "load",
+		"deleteShape/:id" : "deleteShape"
       },
 
       initialize: function (paletteShapes, canvasShapes, connections,canvas) {
@@ -101,11 +102,8 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
       	//if the current view has an id different      	
 		var current = this.contents[id];
 		//i need to bind the original event handler
-		if(current.initHandler){
-			current.initHandler();//deprecated
-			//NEED a more elegant way of understand the canvas case.. typeOF?
-			Jel.Canvas = current;
-		}
+		if(current instanceof canvasView) Jel.Canvas = this.canvas = current;
+		
 		this.tabView.changeTab(id);
 		this.changePage(current);
 		
@@ -169,6 +167,32 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 	      	this.index();
 	    }
       },
+
+      deleteShape: function(id){
+			//delete the graphicalElement of the currentCanvas!
+			this.canvas.canvasShapes.get(id).el.removeShape();
+			//delete from canvasShapes
+			this.canvas.canvasShapes.remove(id);
+			this.deleteConnections(id);
+	},
+
+	deleteConnections: function(id){
+		var i;
+		var toRemove = new Backbone.Collection();
+		//I can't search and remove collection member at the same time
+		for(i=0; i<this.connections.length; i++){
+			if(this.connections.at(i).inbound == id || this.connections.at(i).outbound ==id){
+				this.connections.at(i).el.remove();
+				toRemove.add(this.connections.at(i));
+			}
+		}
+
+		for(i=0; i<toRemove.length; i++){
+			this.connections.remove(toRemove.at(i));
+		}
+
+		delete toRemove;
+	},
 
       changePage: function(page){
       	$('#main').empty();
