@@ -58,7 +58,11 @@ define(["jquery", "underscore", "backbone", "ractive", "views/tabItemView", "tex
 				else trovato = true;
 			}
 			ev.data.context.history.splice(ev.data.context.history.length-1, ev.data.context.history.length);
-			Backbone.history.navigate('tab/'+ev.data.context.history[0], {trigger: true});
+			Backbone.history.navigate('closeTab/'+tab.id, {trigger: true});
+		},
+
+		getLatestTab: function(){
+			return this.history[0];
 		},
 
         render: function (eventName) {

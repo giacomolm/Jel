@@ -46,7 +46,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 			this.canvasShapes.at(i).el = this.drawShape(this.canvasShapes.at(i), this.canvasShapes.at(i).id, this);			
 
 		}
-		this.drawConnections();
+		this.drawConnections(this);
 
 		this.paper.getCanvas().addEventListener('click', this.cleanCanvas(this));
 
@@ -136,13 +136,13 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	/*drawConnection is executed when an existing shape element is explored: it draws connnections
 	  between elements of the current canvas.
 	*/
-	drawConnections: function(){
+	drawConnections: function(context){
 		var i,j;
 		for(i=0; i<this.canvasShapes.length; i++){
 			for(j=0; j<this.connections.length; j++){
 				//replacing the old graphical connection element with the new one
 				if((this.connections.at(j).outbound == this.canvasShapes.at(i).id) &&(this.canvasShapes.get(this.connections.at(j).outbound).el))
-					this.connections.at(j).el = this.paper.connection(this.canvasShapes.get(this.connections.at(j).outbound).el,this.canvasShapes.get(this.connections.at(j).inbound).el,"#000");
+					this.connections.at(j).el = this.paper.connection(this.connections.at(j).id, this.canvasShapes.get(this.connections.at(j).outbound).el,this.canvasShapes.get(this.connections.at(j).inbound).el,"#000", undefined, context);
 			}
 		}
 	},
@@ -153,8 +153,13 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		var connection = new Connection();
 		connection.outbound = shapeInstance1.id;
 		connection.inbound = shapeInstance2.id;
-		connection.el = context.paper.connection(shapeInstance1.el,shapeInstance2.el,"#000");
+		connection.el = context.paper.connection(connection.getId(), shapeInstance1.el,shapeInstance2.el,"#000", undefined, context);
+		//listening to canvas events, like moving the arrow, deleting it ec
 		$(connection.el).on("moving", context.detachArrow(context));
+		$(connection.el).on("removeArrow", function(event, id){
+			event.target.menu.hide(); //hide the current context menu 
+			Backbone.history.navigate("deleteConnection/"+id, {trigger: true});
+		});
 		context.connections.add(connection);
 	},
 	
@@ -176,7 +181,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 			var att = {x: e.clientX-context.el.offsetLeft-2, y: e.clientY-context.el.offsetTop};								
 			fakeShape.el.attr(att);
 			context.connections.pop().el.remove();
-			context.connect(context.canvasShapes.get(context.arrowActive.source), fakeShape);				
+			context.connect(context.canvasShapes.get(context.arrowActive.source), fakeShape, context);				
 			context.paper.safari();
 		}
 		else{
@@ -191,7 +196,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 			//push the non fake element previously popped
 			context.canvasShapes.push(topShape);					
 			//add the connection
-			context.connect(context.canvasShapes.get(context.arrowActive.source), fakeShape);					
+			context.connect(context.canvasShapes.get(context.arrowActive.source), fakeShape, context);					
 		}
 		
 		context.canvasShapes.push(fakeShape);						
@@ -210,7 +215,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 				targetShape.el.animate({"opacity": 1}, 200);
 				
 				//connect the source element to the current element
-				context.connect(context.canvasShapes.get(context.arrowActive.source), targetShape);
+				context.connect(context.canvasShapes.get(context.arrowActive.source), targetShape, context);
 				$(context.paper.getCanvas()).off("mousemove", context.simulateConnect);
 				context.arrowActive.active = false;
 			}
@@ -230,6 +235,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 					$(context.paper.getCanvas()).off("mousemove", context.simulateConnect);
 					context.arrowActive.active = false;
 				}
+				else (context.cleanCanvas(context))();
 			  break;
 			}
 		},
@@ -269,8 +275,14 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 			return function(){
 				var i;
 				for(i=0; i<context.canvasShapes.length; i++){
-					if(context.canvasShapes.at(i).el){
+					if(context.canvasShapes.at(i).el && context.canvasShapes.at(i).el.menu){
 						context.canvasShapes.at(i).el.menu.hide();
+					}
+				}
+
+				for(i=0; i<context.connections.length; i++){
+					if(context.connections.at(i).el){
+						context.connections.at(i).el.menu.hide();
 					}
 				};
 			}

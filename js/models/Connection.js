@@ -9,11 +9,15 @@ define(["jquery", "underscore", "backbone"],
       },
       
       initialize: function(){
-
+        this.id = (new Date()).getTime();
       },
 
       setId: function(id){
         this.id = id
+      },
+
+      getId: function(){
+        return this.id;
       },
 
       setInbound : function(inbound){

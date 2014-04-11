@@ -11,7 +11,9 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		"text": "convert",
 		"save": "saveFile",
 		"load": "load",
-		"deleteShape/:id" : "deleteShape"
+		"deleteShape/:id" : "deleteShape",
+		"closeTab/:id" : "deleteTab",
+		"deleteConnection/:id" : "deleteConnection", 
       },
 
       initialize: function (paletteShapes, canvasShapes, connections,canvas) {
@@ -108,6 +110,11 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		this.changePage(current);
 		
       },
+
+      deleteTab: function(id){
+      	delete this.contents[id];
+      	this.changeTab(this.tabView.getLatestTab());
+      },
       
       changeProperties: function(shapeId){
       	//if currentView is undefined, it means that we have to create it
@@ -192,6 +199,18 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		}
 
 		delete toRemove;
+	},
+
+	//Delete a single collection, based on id of the connection
+	deleteConnection: function(id){
+		var i;
+		//I can't search and remove collection member at the same time
+		for(i=0; i<this.connections.length; i++){
+			if(this.connections.at(i).getId() == id){
+				this.connections.at(i).el.remove();
+				this.connections.remove(id);
+			}
+		}
 	},
 
       changePage: function(page){
