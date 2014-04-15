@@ -61,20 +61,31 @@ define(["jquery", "underscore", "backbone", "ractive", "views/tabItemView", "tex
 			Backbone.history.navigate('closeTab/'+tab.id, {trigger: true});
 		},
 
+		closeAllTabs: function(){
+			//remove all entry of tabs and history.
+			for(id in this.tabs){				
+		    	this.subViews[id].remove();
+			}
+			this.tabs = [];
+			this.history.splice(0,this.history.length);
+			this.render();
+		},
+
 		getLatestTab: function(){
 			return this.history[0];
 		},
 
-        render: function (eventName) {
+        render: function (eventName) {        	
 		    this.template = new Ractive({el : $(this.el), template: template});
-
+		    this.subViews = new Array();
 		    for(id in this.tabs){
-		    	var subView = (new tabItemView({model: this.tabs[id]}));
-		    	$(subView).on("removed", {context : this}, this.closeTab);
-			    $(this.el).append(subView.render().el);
+		    	this.subViews[id] = (new tabItemView({model: this.tabs[id]}));
+		    	$(this.subViews[id]).on("removed", {context : this}, this.closeTab);
+			    $(this.el).append(this.subViews[id].render().el);
 			}
 	    	return this;
         }
+
        
       });
 

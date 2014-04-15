@@ -11,7 +11,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	
 	template : new Ractive({el : $(this.el), template: template}),
 	
-    initialize: function (paletteShapes, canvasShapes, connections) {
+    initialize: function (paletteShapes, canvasShapes, connections, id) {
 		
 		//palette shapes remains the same 
 		this.paletteShapes = paletteShapes;
@@ -32,7 +32,8 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		
 		$(document).on('keydown', {context:this}, this.keydownHandler);
 		
-		this.id = (new Date()).getTime();
+		//if the canvas is derived from a composed shape, the canvas id is the same of the shape
+		this.id = id || (new Date()).getTime();
 
 		//if canvasShapes is not empty, we have to initialize the canvas with existing shapes
 		var i;
@@ -65,8 +66,9 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		return function(ev){			
 			var sourceId = ev.dataTransfer.getData("Text");
 			var currentShape = context.paletteShapes.at(sourceId);
-			context.addShape(currentShape,context,ev);	
+			var instance = context.addShape(currentShape,context,ev);	
 			ev.preventDefault();
+			Backbone.history.navigate("addShape/"+instance.id, {trigger:true});
 		}		
 	},
 	
@@ -98,8 +100,23 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		currentShape.type = shape.type;
 		currentShape.name = shape.name;
 		currentShape.props['id'] = shape.props['id'];
+
+		$(currentShape.el).on("removeShape", function(event, id){
+			event.target.menu.hide(); //hide the current context menu 
+			Backbone.history.navigate("deleteShape/"+id, {trigger: true});
+		});
+
+		$(currentShape.el).on("addArrow", function(event, id){
+			event.target.menu.hide(); //hide the current context menu 
+			(context.onselect(context))(id);
+		});
+
+		$(currentShape.el).on("removeArrows", function(event, id){
+			event.target.menu.hide(); //hide the current context menu 
+			Backbone.history.navigate("deleteConnections/"+id, {trigger: true});
+		});
 				
-		context.canvasShapes.add(currentShape);		
+		context.canvasShapes.add(currentShape);
 
 		return currentShape;
 	},
@@ -165,8 +182,10 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	
 	//Since the mousedown event of rafael doesn't support parameters, we have to wrap the real function with another that fix locally the right context
 	onselect: function(context){	
-		return function(){
-			context.arrowActive.source = this.id;
+		return function(id){
+			if(typeof id == "object")
+				context.arrowActive.source = this.id;
+			else context.arrowActive.source = id;
 			context.arrowActive.active = true;
 			$(context.paper.getCanvas()).on("mousemove",{context : context}, context.simulateConnect);			
 		}
@@ -274,12 +293,12 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		cleanCanvas: function(context){
 			return function(){
 				var i;
+				//remove context menu from shapes
 				for(i=0; i<context.canvasShapes.length; i++){
 					if(context.canvasShapes.at(i).el && context.canvasShapes.at(i).el.menu){
 						context.canvasShapes.at(i).el.menu.hide();
 					}
 				}
-
 				for(i=0; i<context.connections.length; i++){
 					if(context.connections.at(i).el){
 						context.connections.at(i).el.menu.hide();

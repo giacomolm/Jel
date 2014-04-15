@@ -1,9 +1,10 @@
 <html>
 <head></head>
 
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/codemirror.css" type="text/css" media="screen">
 <link rel="stylesheet" href="css/bootstrap.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/jstree/jstree.min.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
 
 <script type="text/javascript" src="lib/jel/jel.js"></script>
 <script data-main="js/main" src="lib/require/require.js"></script>
@@ -78,6 +79,14 @@
 		shape6.setName("Method");
 		shape6.setMetaelement('method');
 		Jel.paletteShapes.addShape(shape6);
+
+		var filter = new Jel.Shape();
+		filter.setImage("img/mf.gif");
+		filter.setName("Filter");
+		filter.setMetaelement('filter');
+		Jel.paletteShapes.addShape(filter);
+		//this element is a composition of different shape
+		filter.setAsComposed();
 		
 	}
 </script>
@@ -87,10 +96,14 @@
 	<div id="dialog"></div>
 	<div id="notification"></div>
 	<div id="palette"><h4>Palette</h4></div>
-	<div id="tab"></div>
 	<div id="container">
+		<div id="tab"></div>
 		<div id="main" ondragover="event.preventDefault()"></div>
 		<div id="dsl"></div>
+	</div>
+	<div id="rightMenu">
+		<h5>Tree</h5>
+		<div id="tree" class="jstree jstree-1 jstree-default jstree-default-responsive"></div>
 		<div id="properties"></div>
 	</div>
 		<!--<div class="contextMenu" id="contextMenu"><ul><li id="createArrow"><a>createArrow</a></li></ul></div>

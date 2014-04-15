@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/Connections","views/canvasView", "jel", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView"],
-    function ($, _,Backbone,Shapes, Connections, canvasView, Jel, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView) {
+define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/Connections","views/canvasView", "jel", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView", "views/treeView"],
+    function ($, _,Backbone,Shapes, Connections, canvasView, Jel, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView, treeView) {
 
     var AppRouter = Backbone.Router.extend({
 
@@ -11,16 +11,18 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		"text": "convert",
 		"save": "saveFile",
 		"load": "load",
+		"addShape/:id": "addShape",
 		"deleteShape/:id" : "deleteShape",
 		"closeTab/:id" : "deleteTab",
 		"deleteConnection/:id" : "deleteConnection", 
+		"deleteConnections/:id" : "deleteConnections",
       },
 
       initialize: function (paletteShapes, canvasShapes, connections,canvas) {
       	//currentView will contain main views of the application: in this case are canvas and dslTextEditor
 		this.currentView = undefined;
 
-		this.contents = [];
+		this.contents = []; //will contain all the main content active view, like canvas and xml editor
 		
 		//make the user defined shapes as default
 		this.paletteShapes = paletteShapes;
@@ -69,6 +71,10 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			Jel.Canvas = this.canvas;
 			this.changePage(this.canvas);
 		}
+		//we cannot initialize the tree editor in the initialice since it can be replaced in the loading phase
+		this.treeView = new treeView({collection:this.canvasShapes, canvas: this.canvas});
+		$('#tree').empty();
+		$('#tree').append($(this.treeView.el));
       },
       
       addCustomEvents: function(){
@@ -79,12 +85,42 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 	
        //id related to composed shape that we are exploding 
       createCanvas: function(id){
-		var currentComposed = this.currentView.canvasShapes.get(id); //i need to get the shape from the previous canvas, where the composed shape is placed on 
-		if(currentComposed && currentComposed.isComposed()){	
-			if(!this.tabView.inTab(currentComposed.canvas)){
-				//if the current shapes properties is empty, i have to initialize it with a new Collection of Shapes
+      	//if i'm exploding a composed shape, i've to create a new canvas
+      	if(this.currentView && this.currentView.canvasShapes){
+			var currentComposed = this.currentView.canvasShapes.get(id); //i need to get the shape from the previous canvas, where the composed shape is placed on 
+			if(currentComposed && currentComposed.isComposed()){	
+				if(!this.tabView.inTab(currentComposed.canvas)){
+					//if the current shapes properties is empty, i have to initialize it with a new Collection of Shapes
+					if(!currentComposed.shapes) currentComposed.shapes = new Shapes();
+					this.canvas = new canvasView(this.paletteShapes, currentComposed.shapes, this.connections, id);
+					//add this canvas to the current collection of existing canvas
+					this.contents[this.canvas.id] = this.canvas;
+					currentComposed.canvas = this.canvas.id
+					this.tabView.addTab(this.canvas.id, currentComposed.props.id || "canvas"+this.tabView.tabs.length);
+					Jel.Canvas = this.canvas;
+					this.changePage(this.canvas);
+				}
+				else{
+					//if the element is yet in the tabs, we don't need to create a new tab
+					this.changeTab(currentComposed.canvas);
+				}
+			}
+			else{
+				//To modify: we need a strategy in order to treat the root canvas separatamente
+				if(this.tabView.inTab(id)|| this.canvasShapes.getShape(id).isComposed()) this.changeTab(id);
+			}
+		}
+		//the canvas is yet created and opened, we've to change tab
+		else if(this.contents[id]){
+			this.changeTab(id);
+		}
+		//otherwise, if we re-opening a composed shape
+		else{
+			//we have to search the right shape in the canvas and reopen it
+			var currentComposed = this.canvasShapes.getShape(id);	
+			if(currentComposed && currentComposed.isComposed()){
 				if(!currentComposed.shapes) currentComposed.shapes = new Shapes();
-				this.canvas = new canvasView(this.paletteShapes, currentComposed.shapes, this.connections);
+				this.canvas = new canvasView(this.paletteShapes, currentComposed.shapes, this.connections, id);
 				//add this canvas to the current collection of existing canvas
 				this.contents[this.canvas.id] = this.canvas;
 				currentComposed.canvas = this.canvas.id
@@ -92,12 +128,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 				Jel.Canvas = this.canvas;
 				this.changePage(this.canvas);
 			}
-			else{
-				//if the element is yet in the tabs, we don't need to create a new tab
-				this.changeTab(currentComposed.canvas);
-			}
 		}
-		//else this.index();
       },
       
       changeTab: function(id){	
@@ -147,8 +178,6 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			else this.changeTab(this.dslView.id);
 			//Codemirror doesn't refresh its context after changes, so we do manually
 			this.dslView.refresh();
-			
-				
 		}
       },
 
@@ -171,53 +200,63 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			this.canvasShapes = Jel.canvasShapes = shapes;
 			this.connections = Jel.connections =connections;
 	      	this.canvas = undefined;
+	      	//remove all previous tab, due the fact that we are loading another draw
+	      	this.tabView.closeAllTabs();
+	      	//we have to delete all the current contents, so we've to empty the current contents
+	      	this.contents = [];
+	      	//like a restart
 	      	this.index();
 	    }
       },
 
-      deleteShape: function(id){
+		addShape: function(id){
+			this.canvasShapes.trigger("addShape");
+		},
+
+		deleteShape: function(id){
 			//delete the graphicalElement of the currentCanvas!
 			this.canvas.canvasShapes.get(id).el.removeShape();
 			//delete from canvasShapes
 			this.canvas.canvasShapes.remove(id);
 			this.deleteConnections(id);
-	},
+			this.canvasShapes.trigger("deleteShape");
+		},
 
-	deleteConnections: function(id){
-		var i;
-		var toRemove = new Backbone.Collection();
-		//I can't search and remove collection member at the same time
-		for(i=0; i<this.connections.length; i++){
-			if(this.connections.at(i).inbound == id || this.connections.at(i).outbound ==id){
-				this.connections.at(i).el.remove();
-				toRemove.add(this.connections.at(i));
+		deleteConnections: function(id){
+			var i;	
+			var toRemove = new Backbone.Collection();
+			//I can't search and remove collection member at the same time
+			for(i=0; i<this.connections.length; i++){
+				if(this.connections.at(i).inbound == id || this.connections.at(i).outbound ==id){
+					this.connections.at(i).el.remove();
+					toRemove.add(this.connections.at(i));
+				}
 			}
-		}
 
-		for(i=0; i<toRemove.length; i++){
-			this.connections.remove(toRemove.at(i));
-		}
-
-		delete toRemove;
-	},
-
-	//Delete a single collection, based on id of the connection
-	deleteConnection: function(id){
-		var i;
-		//I can't search and remove collection member at the same time
-		for(i=0; i<this.connections.length; i++){
-			if(this.connections.at(i).getId() == id){
-				this.connections.at(i).el.remove();
-				this.connections.remove(id);
+			for(i=0; i<toRemove.length; i++){
+				this.connections.remove(toRemove.at(i));
 			}
-		}
-	},
 
-      changePage: function(page){
-      	$('#main').empty();
-        this.currentView = page;
-        $('#main').append($(this.currentView.el));
-      }
+			delete toRemove;
+		},
+
+		//Delete a single collection, based on id of the connection
+		deleteConnection: function(id){
+			var i;
+			//I'm removing only on connections, so i don't need of an array of copies
+			for(i=0; i<this.connections.length; i++){
+				if(this.connections.at(i).getId() == id){
+					this.connections.at(i).el.remove();
+					this.connections.remove(id);
+				}
+			}
+		},
+
+		changePage: function(page){
+			$('#main').empty();
+			this.currentView = page;
+			$('#main').append($(this.currentView.el));
+		}
       
 
     });

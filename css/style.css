@@ -1,5 +1,8 @@
 body {
     font: 300 100.1% "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;
+    width:1000px;
+    margin-left: 5px;
+    font-size: 13px;
 }
 #holder {
     height: 480px;
@@ -20,6 +23,7 @@ body {
 #palette{
 	float:left;
 	width : 125px;
+	height: 550px;
 	font-family: 'Open Sans','Droid Sans',arial,sans-serif;
 }
 
@@ -44,18 +48,33 @@ body {
 	text-align: center;
 }
 
+#basepalette{
+	height : 220px;
+	overflow-y: scroll;
+}
+
+#composedpalette{
+	height : 220px;
+	overflow-y: scroll;	
+}
+
 #container{
 	margin-left: 125px;
 }
 
 #properties{
 	font-family: "SQMarket-regular","Helvetica Neue",sans-serif;
-	
+	float: left;
 }
 
 #properties h5{
 	margin-top: 0;
 	
+}
+
+#properties div > ul{
+	margin-left: 5px;
+	padding-left: 5px;
 }
 
 #properties li{
@@ -64,23 +83,27 @@ body {
 
 #props input{
 	clear:right;
+	display: block;
 }
 
-.contextMenu {
-    position: absolute;
-    width: 150px;
-    z-index: 99999;
+#contextMenu {
+	background-color: #EEE;
     border: solid 1px #CCC;
-    background: #EEE;
-    padding: 0px;
-    margin: 0px;
-    display: none;
+    font-family: Consolas;
 }
 
-.contextMenu LI {
-    list-style: none;
-    padding: 0px;
-    margin: 0px;
+#textMenu{
+    cursor : pointer;
+    color: #333;
+    text-decoration: none;
+    display: block;
+    line-height: 20px;
+    height: 20px;
+    background-position: 6px center;
+    background-repeat: no-repeat;
+    outline: none;
+    padding: 1px 5px;
+    padding-left: 28px;
 }
 
 .contextMenu A {
@@ -203,4 +226,41 @@ span.clear{
 
 #dsl{
 	display : none;
+}
+
+#tree{
+	float:left;
+	margin-bottom: 10px;
+}
+
+#rightmenu{
+	width: 250px;
+	float: left;
+}
+
+#notification{
+	text-align : center;
+}
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+    width: 9px;
+}
+ 
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(A,A,A,0.8); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(a,a,a,0.4); 
 }

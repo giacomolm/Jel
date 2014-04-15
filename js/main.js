@@ -18,7 +18,8 @@ require.config({
     bootstrap: '../lib/bootstrap/bootstrap',
     bootbox: '../lib/bootbox/bootbox',
     xmllint: '../lib/xmllint/xmllint',
-    filesaver: '../lib/filesaver/filesaver'
+    filesaver: '../lib/filesaver/filesaver',
+    jstree: '../lib/jstree/jstree'
   },
   shim: {
     'jquery': {
@@ -36,6 +37,9 @@ require.config({
     },
     'bootbox': {
         deps: ['jquery', 'bootstrap'],
+    },
+    'jstree': {
+        deps: ['jquery']
     }
   }
 });

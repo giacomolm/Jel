@@ -35,6 +35,18 @@ define(["jquery", "underscore", "ractive", "models/Shape"],
 			}			
 			return this;
 		},
+
+		getShape: function(id){
+			var i;
+			for(i=0; i<this.length; i++){
+				if(this.at(i).id == id) return this.at(i);
+				if(this.at(i).shapes){
+					var res = this.at(i).shapes.getShape(id);
+					if(res) return res;
+				}
+			}
+			return undefined;
+		}
 	
     });
 

@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "ractive", "text!templates/notification.html"],
-        function ($, _, Backbone, Ractive, template) {
+define(["jquery", "underscore", "backbone", "ractive", "bootbox","text!templates/notification.html"],
+        function ($, _, Backbone, Ractive, bootbox, template) {
 
     var notificationView = Backbone.View.extend({
     	
@@ -13,8 +13,15 @@ define(["jquery", "underscore", "backbone", "ractive", "text!templates/notificat
         },
 
         warning: function(text){
-            this.model = {message : text};
-            $(this.el).show();
+            if(text.indexOf('validates') != -1){
+                this.model = {message : text};
+                $(this.el).show();
+            }
+            else{
+                bootbox.alert(text, function() {
+                    
+                });
+            }
             this.render();
         },
 
