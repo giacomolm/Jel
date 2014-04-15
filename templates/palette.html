@@ -1,9 +1,13 @@
 <h6>{{type}}</h6>
 <div id="{{type}}palette">
-{{#list:i}}
-  <li>
-  	<img src="{{url}}" draggable="true" id="{{id}}" />
-  	<div>{{name}}</div>
-  </li>
-{{/list}}
+	<div>
+		<ul>
+		{{#list:i}}
+		  <li>
+			<img src="{{url}}" draggable="true" id="{{id}}" />
+			<div>{{name}}</div>
+		  </li>
+		{{/list}}
+		</ul>
+	</div>
 </div>

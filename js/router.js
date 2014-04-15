@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/Connections","views/canvasView", "jel", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView", "views/treeView"],
-    function ($, _,Backbone,Shapes, Connections, canvasView, Jel, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView, treeView) {
+define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/Connections","views/canvasView", "jel", "scrollbar", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView", "views/treeView"],
+    function ($, _,Backbone,Shapes, Connections, canvasView, Jel, scrollbar, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView, treeView) {
 
     var AppRouter = Backbone.Router.extend({
 
@@ -49,6 +49,9 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		//adding the palette with the default shapes
 		this.paletteView =new paletteView(this.paletteShapes);
 		$('#palette').append($(this.paletteView.el));
+		//setting perfect scrollbar in order to manager in a goog way the overflow
+		$('#basepalette').perfectScrollbar();
+		$('#composedpalette').perfectScrollbar();
 		      
 		//adding the default text editor view
 		this.dslView = new dslView();

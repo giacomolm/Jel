@@ -2,8 +2,6 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "collections/S
     function ($, _, Backbone, Ractive, Raphael, Shapes, template) {
 
     var paletteView = Backbone.View.extend({
-	   
-	tagName : "ul",
 	    
         events : {
             "dragstart img" : "drag"

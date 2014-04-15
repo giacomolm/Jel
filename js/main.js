@@ -19,7 +19,8 @@ require.config({
     bootbox: '../lib/bootbox/bootbox',
     xmllint: '../lib/xmllint/xmllint',
     filesaver: '../lib/filesaver/filesaver',
-    jstree: '../lib/jstree/jstree'
+    jstree: '../lib/jstree/jstree',
+    scrollbar: '../lib/scrollbar/scrollbar'
   },
   shim: {
     'jquery': {

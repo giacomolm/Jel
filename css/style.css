@@ -50,12 +50,14 @@ body {
 
 #basepalette{
 	height : 220px;
-	overflow-y: scroll;
+	overflow-y: hidden;
+	position:relative;
 }
 
 #composedpalette{
 	height : 220px;
-	overflow-y: scroll;	
+	position:relative;
+	overflow-y: hidden;
 }
 
 #container{
@@ -242,19 +244,17 @@ span.clear{
 	text-align : center;
 }
 
-/* Let's get this party started */
+/* Let's get this party started 
 ::-webkit-scrollbar {
     width: 9px;
 }
  
-/* Track */
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
     -webkit-border-radius: 10px;
     border-radius: 10px;
 }
  
-/* Handle */
 ::-webkit-scrollbar-thumb {
     -webkit-border-radius: 10px;
     border-radius: 10px;
@@ -263,4 +263,4 @@ span.clear{
 }
 ::-webkit-scrollbar-thumb:window-inactive {
 	background: rgba(a,a,a,0.4); 
-}
+}*/
