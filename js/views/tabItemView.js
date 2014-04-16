@@ -18,11 +18,21 @@ define(["jquery", "underscore", "backbone", "ractive", "text!templates/tabItem.h
         closeTab: function(ev){
         	$(this).trigger("removed", [this]);
 			this.remove();
+            ev.stopImmediatePropagation();
 		},
 		
 		changeTab: function(ev){
-			Backbone.history.navigate('tab/'+ev.target.id, {trigger: true});
+            this.setTabActive(this.id);
+			Backbone.history.navigate('tab/'+this.id, {trigger: true});
 		},
+
+        setTabActive: function(id){
+            var i, temp_select ="\""+id+"\"";
+            var elements = document.getElementsByName(id)
+            for(i=0; i<elements.length; i++){
+                $(elements[i]).removeClass("inactive");
+            }
+        },
 
         render: function (eventName) {
 		    this.template = new Ractive({el : $(this.el), template: template, data : this.model});

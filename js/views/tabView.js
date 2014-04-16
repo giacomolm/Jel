@@ -20,7 +20,7 @@ define(["jquery", "underscore", "backbone", "ractive", "views/tabItemView", "tex
 		addTab: function(id, type){
 			this.tabs[id] = {id: id, name: type};
 			this.history.unshift(parseInt(id));
-			this.render();
+			this.render(id);
 		},
 		
 		inTab : function(id){		
@@ -42,6 +42,29 @@ define(["jquery", "underscore", "backbone", "ractive", "views/tabItemView", "tex
 					else trovato = true; 
 				}
 				if(trovato) this.history[0] = id;
+			}
+			this.setTabActive(id);
+		},
+
+		setTabActive: function(id){
+            var i;
+            var elements = document.getElementsByName(id);
+            for(i=0; i<elements.length; i++){
+                $(elements[i]).removeClass("inactive");
+            }
+            this.setTabInactive(id);
+        },
+
+		setTabInactive: function(id){
+			var i;
+			for(i=0; i<this.history.length; i++){
+				if(this.history[i] != id){
+					var j;
+					var elements = document.getElementsByName(this.history[i]);
+					for(j=0; j<elements.length; j++){
+						$(elements[j]).addClass("inactive");
+					}
+				}
 			}
 		},
 
@@ -75,7 +98,7 @@ define(["jquery", "underscore", "backbone", "ractive", "views/tabItemView", "tex
 			return this.history[0];
 		},
 
-        render: function (eventName) {        	
+        render: function (id) {        	
 		    this.template = new Ractive({el : $(this.el), template: template});
 		    this.subViews = new Array();
 		    for(id in this.tabs){
@@ -83,6 +106,7 @@ define(["jquery", "underscore", "backbone", "ractive", "views/tabItemView", "tex
 		    	$(this.subViews[id]).on("removed", {context : this}, this.closeTab);
 			    $(this.el).append(this.subViews[id].render().el);
 			}
+			if(id) this.setTabInactive(id);
 	    	return this;
         }
 

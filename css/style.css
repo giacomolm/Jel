@@ -140,8 +140,9 @@ body {
 
 #main{
 	border: solid 1px #aaa;
+	border-top : none;
 	float : left;
-	margin : 10px;
+	margin-left: 10px;
 	width:600px;
 	height:480px;
 }
@@ -198,33 +199,70 @@ span.clear{
 }
 
 #tab{
-	height : 20px;
+	height : 24px;
+	display: inline-block;
+	width: 600px;
+	margin-left: 10px;
+	border-bottom:1px solid #aaa;
+}
+
+#tab ul{
+	padding-left: 0px;
 }
 
 #tab li{
 	list-style-type: none;
-	float :left;
-	margin-right : 20px;
 	cursor:pointer;
 	font-size: 12px;
 	font-family: Arial;
+	float:left;
+	line-height: 1.8em;
+}
+
+.tab-main{
+	background: url('../img/tab/tabs-sprite.gif') no-repeat scroll 0px 0px;
+	height : 24px;
+}
+
+.tab-main.inactive{
+	background: url('../img/tab/tabs-sprite.gif') no-repeat scroll 0px -51px transparent;
+	height : 23px;
+}
+
+.tab-inner{
+	background: url('../img/tab/tabs-sprite.gif') repeat scroll 0px -151px transparent;
+	margin-left: 10px;
+	margin-right: 10px;
+	height : 24px;
+	float:left;
+}
+
+.tab-inner.inactive{
+	background: url('../img/tab/tabs-sprite.gif')  repeat scroll 0px -201px transparent;
+	height : 23px;
+}
+
+.tab-right{
+	background: url('../img/tab/tabs-sprite.gif') no-repeat scroll right -301px transparent;
+    height : 24px;
+}
+.tab-right.inactive{
+	background: url('../img/tab/tabs-sprite.gif') no-repeat scroll right -351px transparent;
+	height : 23px;
 }
 
 .boxclose{
-    float:right;
-    cursor:pointer;
-    color: #fff;
-    border: 1px solid #AEAEAE;
-    border-radius: 15px;
-    background: #605F61;
-    font-size: 11px;
-    display: inline-block;
-    margin-left: 5px;  
+	background: url('../img/tab/tab-close.gif');
+	width:11px;
+	height:11px;
+	margin-top:3px;
+	margin-right:3px;
+	float:right;
 }
 
-.boxclose:before {
+/*.boxclose:before {
     content: " x ";
-}
+}*/
 
 #dsl{
 	display : none;
