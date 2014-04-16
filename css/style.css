@@ -204,6 +204,7 @@ span.clear{
 	width: 600px;
 	margin-left: 10px;
 	border-bottom:1px solid #aaa;
+	/*overflow-y : auto;*/
 }
 
 #tab ul{

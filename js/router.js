@@ -89,7 +89,8 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
        //id related to composed shape that we are exploding 
       createCanvas: function(id){
       	//if i'm exploding a composed shape, i've to create a new canvas
-      	if(this.currentView && this.currentView.canvasShapes){
+      	var currentComposed;
+      	if(this.currentView && this.currentView.canvasShapes && (currentComposed = this.currentView.canvasShapes.get(id))){
 			var currentComposed = this.currentView.canvasShapes.get(id); //i need to get the shape from the previous canvas, where the composed shape is placed on 
 			if(currentComposed && currentComposed.isComposed()){	
 				if(!this.tabView.inTab(currentComposed.canvas)){
@@ -110,7 +111,9 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			}
 			else{
 				//To modify: we need a strategy in order to treat the root canvas separatamente
-				if(this.tabView.inTab(id)|| this.canvasShapes.getShape(id).isComposed()) this.changeTab(id);
+				if(this.contents[id]){
+					if(this.tabView.inTab(id)|| this.canvasShapes.getShape(id).isComposed()) this.changeTab(id);
+				}
 			}
 		}
 		//the canvas is yet created and opened, we've to change tab
