@@ -6,11 +6,12 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
       routes: {
         "": "index",
 		"props/:id" : "changeProperties",
-		"canvas/:id" : "createCanvas",
+		"canvas/:id" : "getCanvas",
 		"tab/:id" : "changeTab",
 		"text": "convert",
 		"save": "saveFile",
 		"load": "load",
+		"notificate/:word" : "openNotification",
 		"addShape/:id": "addShape",
 		"deleteShape/:id" : "deleteShape",
 		"closeTab/:id" : "deleteTab",
@@ -86,23 +87,18 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		}, this);	
        },
 	
-       //id related to composed shape that we are exploding 
-      createCanvas: function(id){
+	   //It's called when a composed shape it's explored: we have to create a new canvas or we have to reopen it
+       //@id related to composed shape that we are searching or creating 
+       getCanvas: function(id){
       	//if i'm exploding a composed shape, i've to create a new canvas
       	var currentComposed;
       	if(this.currentView && this.currentView.canvasShapes && (currentComposed = this.currentView.canvasShapes.get(id))){
-			var currentComposed = this.currentView.canvasShapes.get(id); //i need to get the shape from the previous canvas, where the composed shape is placed on 
+      		//we need to get the shape from the previous canvas, where the composed shape is placed on 
+			var currentComposed = this.currentView.canvasShapes.get(id); 
 			if(currentComposed && currentComposed.isComposed()){	
 				if(!this.tabView.inTab(currentComposed.canvas)){
-					//if the current shapes properties is empty, i have to initialize it with a new Collection of Shapes
-					if(!currentComposed.shapes) currentComposed.shapes = new Shapes();
-					this.canvas = new canvasView(this.paletteShapes, currentComposed.shapes, this.connections, id);
-					//add this canvas to the current collection of existing canvas
-					this.contents[this.canvas.id] = this.canvas;
-					currentComposed.canvas = this.canvas.id
-					this.tabView.addTab(this.canvas.id, currentComposed.props.id || "canvas"+this.tabView.tabs.length);
-					Jel.Canvas = this.canvas;
-					this.changePage(this.canvas);
+					//it's the first that i'm exploding a composed shape, so let's create a new canvas
+					this.createCanvas(currentComposed, id);
 				}
 				else{
 					//if the element is yet in the tabs, we don't need to create a new tab
@@ -125,16 +121,30 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			//we have to search the right shape in the canvas and reopen it
 			var currentComposed = this.canvasShapes.getShape(id);	
 			if(currentComposed && currentComposed.isComposed()){
-				if(!currentComposed.shapes) currentComposed.shapes = new Shapes();
-				this.canvas = new canvasView(this.paletteShapes, currentComposed.shapes, this.connections, id);
-				//add this canvas to the current collection of existing canvas
-				this.contents[this.canvas.id] = this.canvas;
-				currentComposed.canvas = this.canvas.id
-				this.tabView.addTab(this.canvas.id, currentComposed.props.id || "canvas"+this.tabView.tabs.length);
-				Jel.Canvas = this.canvas;
-				this.changePage(this.canvas);
+				//the current composed shape was exploded yet, so we have to reopen its canvas
+				this.createCanvas(currentComposed, id);
+			}
+			else{
+				//we're reopening the main canvas
+				this.canvas = undefined;
+				this.index();
 			}
 		}
+      },
+
+      //create a new canvas starting from the shape we're exploding
+      //shape that we are exploding
+      //id of the parent element
+      createCanvas : function(shape, id){
+      		var  currentComposed = shape;
+      		if(!currentComposed.shapes) currentComposed.shapes = new Shapes();
+			this.canvas = new canvasView(this.paletteShapes, currentComposed.shapes, this.connections, id);
+			//add this canvas to the current collection of existing canvas
+			this.contents[this.canvas.id] = this.canvas;
+			currentComposed.canvas = this.canvas.id
+			this.tabView.addTab(this.canvas.id, currentComposed.props.id || "canvas"+this.tabView.tabs.length);
+			Jel.Canvas = this.canvas;
+			this.changePage(this.canvas);	
       },
       
       changeTab: function(id){	
@@ -255,6 +265,12 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 					this.connections.at(i).el.remove();
 					this.connections.remove(id);
 				}
+			}
+		},
+
+		openNotification: function(word){
+			if(word == "info"){
+				this.notification.info();
 			}
 		},
 

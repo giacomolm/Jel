@@ -12,7 +12,11 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 		    "mouseout #editMenu" : "hideEditOpt",
 		    "click #editMenu" : "toggleEditOpt",
 		    "click #convertOpt" : "convert",
-		    "click .openOpt" : "openFile"
+		    "click .openOpt" : "openFile",
+		    "mouseover #aboutMenu" : "showAboutOpt",
+		    "mouseout #aboutMenu" : "hideAboutOpt",
+		    "click #infoOpt": "openInfo"
+
         },	
 	
         initialize: function (shapes, connections){
@@ -47,6 +51,14 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 		
 		},
 
+		showAboutOpt: function(){
+			$('#aboutOpts').show();
+		},
+		
+		hideAboutOpt: function(){
+			$('#aboutOpts').hide();
+		},
+
 		openFile: function(){
 			$("#fileOpts").hide();
 			$("#fileOpen").trigger('click');
@@ -73,6 +85,10 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 		save : function(){
 			$('#fileOpts').hide();
 			Backbone.history.navigate('save', {trigger: true});
+		},
+
+		openInfo : function(){
+			Backbone.history.navigate('notificate/'+"info", {trigger: true});
 		},
 
         render: function (eventName) {

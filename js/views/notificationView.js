@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "ractive", "bootbox","text!templates/notification.html"],
-        function ($, _, Backbone, Ractive, bootbox, template) {
+define(["jquery", "underscore", "backbone", "ractive", "bootbox","text!templates/notification.html", "text!templates/info.html"],
+        function ($, _, Backbone, Ractive, bootbox, template, info) {
 
     var notificationView = Backbone.View.extend({
     	
@@ -23,6 +23,10 @@ define(["jquery", "underscore", "backbone", "ractive", "bootbox","text!templates
                 });
             }
             this.render();
+        },
+
+        info: function(){
+            bootbox.alert(info);
         },
 
         render: function (eventName) {
