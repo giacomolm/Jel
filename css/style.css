@@ -3,6 +3,7 @@ body {
     width:1000px;
     margin-left: 5px;
     font-size: 13px;
+    /*background: linear-gradient(to bottom, #EFF5FF 0px, #E0ECFF 100%) repeat-x scroll 0% 0% transparent;*/
 }
 #holder {
     height: 480px;
@@ -23,16 +24,23 @@ body {
 #palette{
 	float:left;
 	width : 125px;
-	height: 550px;
+	height: 535px;
 	font-family: 'Open Sans','Droid Sans',arial,sans-serif;
+	border:1px solid #DDD;
 }
+
 
 #palette ul{
 	padding-left : 5px;
 }
+#paletteheader{
+	background: linear-gradient(to bottom, #F9F9F9 0px, #EFEFEF 100%) repeat-x scroll 0% 0% transparent;
+	height: 23px;
+	border-top: none
+}
 
-#palette h5{
-	margin-top : 0px;
+#paletteheader h5{
+	margin-top : 0px;	
 }
 
 #palette ul{
@@ -46,41 +54,37 @@ body {
 	font-size : 11px;
 	font-family: "Raleway";
 	text-align: center;
+
 }
+
+#palette > div{
+	border-top:1px solid #DDD;
+}
+
+#palette > div h6{
+	padding-left:1em;
+	text-decoration: underline;
+}
+
 
 #basepalette{
 	height : 220px;
 	overflow-y: hidden;
 	position:relative;
+	background-color: #FFF;
+	padding-top: 3px;
 }
 
 #composedpalette{
 	height : 220px;
 	position:relative;
 	overflow-y: hidden;
+	background-color: #FFF;
+	padding-top: 3px;
 }
 
 #container{
 	margin-left: 125px;
-}
-
-#properties{
-	font-family: "SQMarket-regular","Helvetica Neue",sans-serif;
-	float: left;
-}
-
-#properties h5{
-	margin-top: 0;
-	
-}
-
-#properties div > ul{
-	margin-left: 5px;
-	padding-left: 5px;
-}
-
-#properties li{
-	list-style-type: none;
 }
 
 #props input{
@@ -144,7 +148,8 @@ body {
 	float : left;
 	margin-left: 10px;
 	width:600px;
-	height:480px;
+	height:511px;
+	background-color: #FFF;
 }
 p {
 	text-align: center;
@@ -153,6 +158,11 @@ p {
 #menu{
 	font-family: "Open Sans","Droid Sans",Arial,sans-serif;
 	font-size : 13px;
+	background: linear-gradient(to bottom, #F9F9F9 0px, #EFEFEF 100%) repeat-x scroll 0% 0% transparent;
+	border: 1px solid #DDD;
+	margin-left: -5px;
+	margin-top: -5px;
+	padding-left: 5px;
 }
 
 #menu ul{
@@ -269,15 +279,66 @@ span.clear{
 	display : none;
 }
 
-#tree{
-	float:left;
-	margin-bottom: 10px;
-}
 
 #rightmenu{
 	width: 250px;
 	float: left;
 	margin-left: 10px;
+	margin-top : -24px;
+}
+
+#treeheader{
+	border:1px solid #DDD;
+	background: linear-gradient(to bottom, #F9F9F9 0px, #EFEFEF 100%) repeat-x scroll 0% 0% transparent;
+}
+
+#treeheader h5{
+	margin-top : 0px;
+	margin-bottom : 8px;
+}
+
+#tree{
+	margin-bottom: 10px;
+	border:1px solid #DDD;
+	border-top : none;
+	width: 100%
+}
+
+#tree ul{
+	padding-left: -15px;
+}
+
+#properties{
+	font-family: "SQMarket-regular","Helvetica Neue",sans-serif;
+	width: 100%;
+	border:1px solid #DDD;
+}
+
+#properties h5{
+	margin-top: 0;
+	padding-bottom: 10px;
+	border-bottom:1px solid #DDD;
+	background: linear-gradient(to bottom, #F9F9F9 0px, #EFEFEF 100%) repeat-x scroll 0% 0% transparent;
+	
+}
+
+#properties div > ul{
+	margin-left: -10px;
+}
+
+#properties li{
+	list-style-type: none;
+}
+
+#anteprimaheader{
+	border:1px solid #DDD;
+	margin-top: 10px;
+	padding-top: 0px;
+	background: linear-gradient(to bottom, #F9F9F9 0px, #EFEFEF 100%) repeat-x scroll 0% 0% transparent;
+}
+
+#anteprimaheader h5{
+	margin-top: 0px;
 }
 
 #notification{
@@ -292,6 +353,7 @@ span.clear{
 #info{
 	text-align: center;
 }
+
 
 /* Let's get this party started 
 ::-webkit-scrollbar {
