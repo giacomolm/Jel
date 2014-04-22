@@ -1,0 +1,7 @@
+.grabbing { cursor: url(closedhand.cur), pointer !important; }
+
+#anteprima { background: #f0000; border: 1px solid #ccc; height: 200px; position: relative; width: 250px; overflow: hidden; }
+#anteprima #map { height: 200px; width: 250px; }
+#anteprima #mapControls { position: absolute; right: 15px; top: 15px; width: 29px; }
+#anteprima #mapControls #up { background: url(../img/iconUp.png) no-repeat center top; display: block; height: 26px; width: 29px; }
+#anteprima #mapControls #down { background: url(../img/iconDown.png) no-repeat center top; display: block; height: 27px; width: 29px; }

@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/Connections","views/canvasView", "jel", "scrollbar", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView", "views/treeView"],
-    function ($, _,Backbone,Shapes, Connections, canvasView, Jel, scrollbar, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView, treeView) {
+define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/Connections","views/canvasView", "jel", "scrollbar", "views/menuView", "views/paletteView", "views/tabView", "views/propertiesView", "views/dslView", "views/dialogView", "views/notificationView", "views/treeView", "views/anteprimaView"],
+    function ($, _,Backbone,Shapes, Connections, canvasView, Jel, scrollbar, menuView, paletteView, tabView, propertiesView, dslView, dialogView, notificationView, treeView, anteprimaView) {
 
     var AppRouter = Backbone.Router.extend({
 
@@ -58,6 +58,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		this.dslView = new dslView();
 		$('#dsl').append($(this.dslView.el));
 		//this.addCustomEvents();
+
       },
      
       index: function(){	
@@ -79,6 +80,8 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		this.treeView = new treeView({collection:this.canvasShapes, canvas: this.canvas});
 		$('#tree').empty();
 		$('#tree').append($(this.treeView.el));
+
+		this.refreshAnteprima();
       },
       
       addCustomEvents: function(){
@@ -227,6 +230,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 
 		addShape: function(id){
 			this.canvasShapes.trigger("addShape");
+			this.refreshAnteprima();
 		},
 
 		deleteShape: function(id){
@@ -236,6 +240,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			this.canvas.canvasShapes.remove(id);
 			this.deleteConnections(id);
 			this.canvasShapes.trigger("deleteShape");
+			this.refreshAnteprima();
 		},
 
 		deleteConnections: function(id){
@@ -272,6 +277,13 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			if(word == "info"){
 				this.notification.info();
 			}
+		},
+
+		refreshAnteprima : function(){
+			$('#anteprima').empty();
+			this.anteprima = new anteprimaView();
+			$('#anteprima').append($(this.anteprima.el));
+			this.anteprima.arrange(this.canvasShapes, this.connections);
 		},
 
 		changePage: function(page){

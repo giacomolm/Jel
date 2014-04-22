@@ -340,6 +340,9 @@ span.clear{
 #anteprimaheader h5{
 	margin-top: 0px;
 }
+#anteprima{
+	border:1px solid #DDD;
+}
 
 #notification{
 	text-align : center;

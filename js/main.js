@@ -11,6 +11,7 @@ require.config({
     templates:"../templates",
     raphael: '../lib/raphael/raphael',
     raphaelext: '../lib/raphael/raphael.ext',
+    raphaelpan: '../lib/raphael/raphael.pan',
     jel: '../lib/jel/jel',
     xsdAttr: '../lib/xsdAttr/xsdAttr',
     codemirror: '../lib/codemirror/codemirror',
