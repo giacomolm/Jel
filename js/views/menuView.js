@@ -20,8 +20,10 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
         },	
 	
         initialize: function (shapes, connections){
-        	this.reader = new FileReader();
-        	this.reader.onload = this.readerHandler(this);
+        	if(window.FileReader){
+		        	this.reader = new FileReader();
+		        	this.reader.onload = this.readerHandler(this);
+		    }
 			this.shapes = shapes;
 			this.connections = connections;
 			this.render();
