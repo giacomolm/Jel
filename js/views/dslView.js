@@ -24,10 +24,12 @@ define(["jquery", "underscore", "backbone", "ractive", "text!templates/dsl.html"
         },
 
         setText : function(content){
-            content = content.replace(/>/g, ">\n");
-            this.editor.setValue(content);
-            for(var i=0; i<this.editor.lineCount(); i++){
-                this.editor.indentLine(i, "smart");
+            if(content){
+                content = content.replace(/>/g, ">\n");
+                this.editor.setValue(content);
+                for(var i=0; i<this.editor.lineCount(); i++){
+                    this.editor.indentLine(i, "smart");
+                }
             }
         },
 

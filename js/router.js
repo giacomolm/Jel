@@ -184,6 +184,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			//Conversion phase: the result of conversion is contained in conversionRes
 			if(Jel.wrapper) conversionRes = Jel.convert(Jel.baseFile, Jel.wrapper, Jel.baseElement);
 			else conversionRes = Jel.convert(Jel.baseFile, undefined, Jel.baseElement);
+
 			this.dslView.setText(conversionRes);
 
 			var validateRes = Jel.validate(conversionRes, Jel.getSchema());

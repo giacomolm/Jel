@@ -42,7 +42,10 @@ require.config({
     },
     'jstree': {
         deps: ['jquery']
-    }
+    },
+    'raphaelpan':{
+        deps: ['raphael']
+    },
   }
 });
   
