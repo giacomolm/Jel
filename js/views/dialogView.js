@@ -18,7 +18,7 @@ define(["jquery", "underscore", "backbone", "ractive", "bootbox", "filesaver", "
 	    result["shapes"] = shapes.toJSON();
 	    result["connections"] = connections.toJSON();*/	
             var json = "[{\"shapes\" : "+JSON.stringify(shapes.toJSON())+", \"connections\" : "+JSON.stringify(connections.toJSON())+"}]";//JSON.stringify(JSON.stringify(result)),
-		  blob = new Blob([json], {type: "application/json"});
+		    var blob = new Blob([json], {type: "application/json"});
             saveAs(blob, "result.json");
         },
 

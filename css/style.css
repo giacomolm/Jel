@@ -195,7 +195,16 @@ div#menu li:hover{
 	padding: 2px 10px;
 	line-height: 1.5;
 	font-weight: normal;
-	cursor:pointer
+	cursor:pointer;
+}
+
+.subMenu{
+	width: 100%
+}
+
+.subMenuOpts{
+	margin-left :140px;
+	margin-top: -20px;
 }
 
 #openOpt input{

@@ -12,9 +12,11 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 		"save": "saveFile",
 		"load": "load",
 		"notificate/:word" : "openNotification",
+		"exportSVG" : "exportSVG",
 		"addShape/:id": "addShape",
 		"deleteShape/:id" : "deleteShape",
 		"closeTab/:id" : "deleteTab",
+		"addConnection" : "addConnection",
 		"deleteConnection/:id" : "deleteConnection", 
 		"deleteConnections/:id" : "deleteConnections",
       },
@@ -61,21 +63,17 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 
       },
      
+      //like the main function: intitilize the canvas view with the right value
       index: function(){	
       	//if the canvas was specified in the init 
-      	if(this.canvas){
-			this.contents[this.canvas.id] = this.canvas;
-			this.tabView.addTab(this.canvas.id, "canvas"+this.tabView.tabs.length);
-			Jel.Canvas = this.canvas;
-			this.changePage(this.canvas);
-		}
-		else{ //create canvas manually
+      	if(! this.canvas){
 			this.canvas = new canvasView(this.paletteShapes, this.canvasShapes, this.connections);
-			this.contents[this.canvas.id] = this.canvas;
-			this.tabView.addTab(this.canvas.id, "canvas"+this.tabView.tabs.length);
-			Jel.Canvas = this.canvas;
-			this.changePage(this.canvas);
 		}
+		//Root canvas is specified in also in position 0: it's useful when we need the root during the execution
+		this.contents[this.canvas.id] = this.contents[0] = this.canvas;
+		this.tabView.addTab(this.canvas.id, "canvas"+this.tabView.tabs.length);
+		Jel.Canvas = this.canvas;
+		this.changePage(this.canvas);
 		//we cannot initialize the tree editor in the initialice since it can be replaced in the loading phase
 		this.treeView = new treeView({collection:this.canvasShapes, canvas: this.canvas});
 		$('#tree').empty();
@@ -109,7 +107,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 				}
 			}
 			else{
-				//To modify: we need a strategy in order to treat the root canvas separatamente
+				//TO MODIFY: we need a strategy in order to treat the root canvas in a separate way
 				if(this.contents[id]){
 					if(this.tabView.inTab(id)|| this.canvasShapes.getShape(id).isComposed()) this.changeTab(id);
 				}
@@ -244,6 +242,10 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			this.refreshAnteprima();
 		},
 
+		addConnection: function(){
+			this.refreshAnteprima();
+		},
+
 		deleteConnections: function(id){
 			var i;	
 			var toRemove = new Backbone.Collection();
@@ -260,6 +262,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			}
 
 			delete toRemove;
+			this.refreshAnteprima();
 		},
 
 		//Delete a single collection, based on id of the connection
@@ -272,6 +275,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 					this.connections.remove(id);
 				}
 			}
+			this.refreshAnteprima();
 		},
 
 		openNotification: function(word){
@@ -285,6 +289,10 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			this.anteprima = new anteprimaView();
 			$('#anteprima').append($(this.anteprima.el));
 			this.anteprima.arrange(this.canvasShapes, this.connections);
+		},
+
+		exportSVG : function(){
+			this.anteprima.exportSVG(this.contents[0].paper);
 		},
 
 		changePage: function(page){

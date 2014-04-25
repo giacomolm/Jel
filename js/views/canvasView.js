@@ -1,5 +1,5 @@
 //if you note the raphael library, i'm using the raphaelext, that includes the original raphael thorught the amd pattern
-define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Shape", "models/Connection", "collections/Shapes", "collections/Connections", "text!templates/canvas.html"],
+define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Shape", "models/Connection", "collections/Shapes", "collections/Connections", "text!templates/canvas.html","raphaelexp"],
     function ($, _, Backbone, Ractive, Raphael,  Shape, Connection, Shapes, Connections,template) {
 
     var canvasView = Backbone.View.extend({
@@ -237,8 +237,9 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 				context.connect(context.canvasShapes.get(context.arrowActive.source), targetShape, context);
 				$(context.paper.getCanvas()).off("mousemove", context.simulateConnect);
 				context.arrowActive.active = false;
+				Backbone.history.navigate("addConnection", {trigger: true});
 			}
-			Backbone.history.navigate("props/"+target.id, {trigger: true});
+			else Backbone.history.navigate("props/"+target.id, {trigger: true});
 		}
 	},
 	

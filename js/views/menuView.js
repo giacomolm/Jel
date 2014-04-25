@@ -15,7 +15,10 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 		    "click .openOpt" : "openFile",
 		    "mouseover #aboutMenu" : "showAboutOpt",
 		    "mouseout #aboutMenu" : "hideAboutOpt",
-		    "click #infoOpt": "openInfo"
+		    "click #infoOpt": "openInfo",
+		    "mouseover #exportOpt" : "showExportOpts",
+		    "mouseout #exportOpt" : "hideExportOpts",
+		    "click #exportSVG" : "exportSVG"
 
         },	
 	
@@ -61,6 +64,14 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 			$('#aboutOpts').hide();
 		},
 
+		showExportOpts: function(){
+			$('#exportOpts').show();
+		},
+
+		hideExportOpts: function(){
+			$('#exportOpts').hide();
+		},
+
 		openFile: function(){
 			$("#fileOpts").hide();
 			$("#fileOpen").trigger('click');
@@ -91,6 +102,10 @@ define(["jquery", "underscore", "backbone", "ractive", "raphael", "jel", "text!t
 
 		openInfo : function(){
 			Backbone.history.navigate('notificate/'+"info", {trigger: true});
+		},
+
+		exportSVG: function(){
+			Backbone.history.navigate('exportSVG', {trigger: true});
 		},
 
         render: function (eventName) {

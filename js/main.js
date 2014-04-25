@@ -12,6 +12,7 @@ require.config({
     raphael: '../lib/raphael/raphael',
     raphaelext: '../lib/raphael/raphael.ext',
     raphaelpan: '../lib/raphael/raphael.pan',
+    raphaelexp: '../lib/raphael/raphael.export',
     jel: '../lib/jel/jel',
     xsdAttr: '../lib/xsdAttr/xsdAttr',
     codemirror: '../lib/codemirror/codemirror',
@@ -21,7 +22,7 @@ require.config({
     xmllint: '../lib/xmllint/xmllint',
     filesaver: '../lib/filesaver/filesaver',
     jstree: '../lib/jstree/jstree',
-    scrollbar: '../lib/scrollbar/scrollbar'
+    scrollbar: '../lib/scrollbar/scrollbar',
   },
   shim: {
     'jquery': {
@@ -44,6 +45,9 @@ require.config({
         deps: ['jquery']
     },
     'raphaelpan':{
+        deps: ['raphael']
+    },
+    'raphaelexp':{
         deps: ['raphael']
     },
   }
