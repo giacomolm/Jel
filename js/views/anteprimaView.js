@@ -40,7 +40,6 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
             for(i=0; i<shapes.length; i++){
 
                 var level = this.getLevel(shapes.at(i).id);
-                console.log(shapes.at(i).url, indepth, level);
                 var currentShape = this.paper.image(shapes.at(i).url, (150*(indepth+level)), (90*(temp_breadth+curr_breadth+i)), 86, 54);
                 //setting the level, in order to retrieve it later
                 currentShape.level = level;
