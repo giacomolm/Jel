@@ -85,7 +85,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
       addCustomEvents: function(){
 		$(document).change(function(ev) {
 				//Utils.appRouter.getCurrentView().trigger("change", ev);
-		}, this);	
+		}, this);
        },
 	
 	   //It's called when a composed shape it's explored: we have to create a new canvas or we have to reopen it
@@ -197,6 +197,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			//Codemirror doesn't refresh its context after changes, so we do manually
 			this.dslView.refresh();
 		}
+		else console.log("You have to configure an xsd file and at least a base file that will wrap your code")
       },
 
       saveFile: function(){

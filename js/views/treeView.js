@@ -45,7 +45,7 @@ define(["jquery", "underscore", "backbone", "ractive", "jstree", "text!templates
 
 		    this.template = new Ractive({el : $(this.el), template: template});
             $(this.el).empty();
-            this.tree = $(this.el).jstree({ core : {data : $.parseJSON(this.treeContent)}}
+            if(this.treeContent) this.tree = $(this.el).jstree({ core : {data : $.parseJSON(this.treeContent)}}
                              );
             $(this.tree).on('select_node.jstree', function (e, data) {
                                   if(data.node.original.canvas) Backbone.history.navigate("canvas/"+data.node.original.canvas, {trigger:true});
