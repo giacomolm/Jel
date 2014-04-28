@@ -6,6 +6,8 @@ define(["jquery", "underscore", "backbone", "jel"],
 		  url : undefined,
 		  x : 0,
 		  y : 0,
+		  width : 0,
+		  height : 0,
 		  props : undefined, //properties associated to shape, retrieved with the help of the meta-element attribute
 		  el : undefined, //represent the grafical element associated
 		  metaelement : undefined, // if an xsd is attached, represents the corresponding element 
@@ -24,6 +26,8 @@ define(["jquery", "underscore", "backbone", "jel"],
 			this.el = shape.el;
 			this.metaelement = shape.metaelement;
 			this.name = shape.name;
+			this.width = shape.width;
+			this.height = shape.height;
 		}
       },
 
@@ -71,6 +75,11 @@ define(["jquery", "underscore", "backbone", "jel"],
 
       setAsComposed: function(){
 		this.type = "composed";
+      },
+
+      setDimension: function(width,height){
+      	this.width = width;
+      	this.height = height;
       },
       
       isComposed: function(){

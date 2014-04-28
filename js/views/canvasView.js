@@ -99,7 +99,10 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		currentShape.url = shape.url;
 		currentShape.type = shape.type;
 		currentShape.name = shape.name;
-		currentShape.props['id'] = shape.props['id'];
+		currentShape.width = shape.width;
+		currentShape.height = shape.height;
+		
+		if(shape.props) currentShape.props['id'] = shape.props['id'];
 
 		$(currentShape.el).on("removeShape", function(event, id){
 			event.target.menu.hide(); //hide the current context menu 
@@ -128,20 +131,18 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 	*/
 	drawShape: function(shape, id, context){
 		//creating the canvas shape element
-		var shapeEl = context.paper.shape(shape.url, shape.x, shape.y, 86, 54, context, context.connectHandler);
+		var shapeEl = context.paper.shape(shape.url, shape.x, shape.y, (shape.width || 86), (shape.height || 54), context, context.connectHandler);
 		shapeEl.id = id;
 		shapeEl.setDblclick(context.composedHandler);
 		//shape text related to canvas element
 		var shapeText;
-		if(shape.props){
-			if(shape.props.id)	shapeText = context.paper.shapeText(shape.name+": "+shape.props.id, shape.x, shape.y, shapeEl, context);
-			else 	shapeText = context.paper.shapeText(shape.name, shape.x, shape.y, shapeEl, context);
-		}
+		if(shape.props && shape.props.id)	shapeText = context.paper.shapeText(shape.name+": "+shape.props.id, shape.x, shape.y, shapeEl, context);
+		else 	shapeText = context.paper.shapeText(shape.name, shape.x, shape.y, shapeEl, context);
 		shapeText.id = id;
 
-		var arrow = context.paper.shapeMenu("img/arrow.png", shape.x, shape.y, 21, 25, 86, context, context.onselect);
+		var arrow = context.paper.shapeMenu("img/arrow.png", shape.x, shape.y, 21, 25, shape.width || 86, context, context.onselect);
 		arrow.id = id;
-		var del = context.paper.shapeMenu("img/delete.png", shape.x, shape.y, 21, 25, 86, context, context.deleteShape,-25,-18);
+		var del = context.paper.shapeMenu("img/delete.png", shape.x, shape.y, 21, 25, shape.width || 86, context, context.deleteShape,-25,-18);
 		del.id = id;
 
 		//Set of all elements related to the current shape

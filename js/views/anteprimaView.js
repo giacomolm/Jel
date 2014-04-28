@@ -40,15 +40,22 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
             for(i=0; i<shapes.length; i++){
 
                 var level = this.getLevel(shapes.at(i).id);
-                var currentShape = this.paper.image(shapes.at(i).url, (150*(indepth+level)), (90*(temp_breadth+curr_breadth+i)), 86, 54);
-                //setting the level, in order to retrieve it later
+
+                //Calculating the width depending the parent position, if it exists
+                if(parent) level = parent.attrs.width + parent.level+30;
+                
+                var currentShape = this.paper.image(shapes.at(i).url, level, (90*(temp_breadth+curr_breadth+i)), shapes.at(i).width || 86 , shapes.at(i).height || 54);
+                //setting the original id
+                currentShape.id = shapes.at(i).id;
+                //setting the level, indicating the margin left, in order to retrieve it later
                 currentShape.level = level;
-                //we need to reset the element id in order to work with the right connections
+                
                 this.shapes[shapes.at(i).id] = currentShape;
                 //draw connnections betwenn element of the same level and between the element and its father
-                this.drawConnections(shapes.at(i).id, parent);
+                if(parent) this.drawConnections(shapes.at(i).id, parent.id);
+                else this.drawConnections(shapes.at(i).id);
                 if(shapes.at(i).shapes && shapes.at(i).shapes.length>0){
-                    temp_breadth += this.drawItems(shapes.at(i).shapes, indepth+level+1,temp_breadth+curr_breadth+i+1, shapes.at(i).id);
+                    temp_breadth += this.drawItems(shapes.at(i).shapes, indepth+level+1,temp_breadth+curr_breadth+i+1, currentShape);
                 }
             }
             return shapes.length+temp_breadth;
@@ -66,13 +73,17 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
             if(!atleastone && parent) this.paper.connection(undefined, this.shapes[parent],this.shapes[shapeId],"#000", undefined, this);
         },
 
-        //calcute the innermost element that precedes the current shape: it useful to understand the indentation of an element in Anteprima
+        //calcute the rightmost-innermost element that precedes the current shape: it useful to understand the indentation of an element in Anteprima
         getLevel: function(shapeId){
             var i, max = 0;
             for(i=0; i<this.connections.length; i++){
-                  if(this.connections.at(i).inbound == shapeId) max = Math.max(this.shapes[this.connections.at(i).outbound].level+1, max);
+
+                if(this.connections.at(i).inbound == shapeId){
+                    max = Math.max(this.shapes[this.connections.at(i).outbound].attrs.width+this.shapes[this.connections.at(i).outbound].level, max);
+                    //console.log();//this.connections.at(i).outbound].attrs.width+this.shapes[this.connections.at(i).outbound].level);
+                }
             }
-            return max;
+            return max+30;
         },
 
         zoomIn: function(e){

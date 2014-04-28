@@ -85,7 +85,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
       addCustomEvents: function(){
 		$(document).change(function(ev) {
 				//Utils.appRouter.getCurrentView().trigger("change", ev);
-		}, this);
+		}, this);	
        },
 	
 	   //It's called when a composed shape it's explored: we have to create a new canvas or we have to reopen it
@@ -143,7 +143,8 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			//add this canvas to the current collection of existing canvas
 			this.contents[this.canvas.id] = this.canvas;
 			currentComposed.canvas = this.canvas.id
-			this.tabView.addTab(this.canvas.id, currentComposed.props.id || "canvas"+this.tabView.tabs.length);
+			if(currentComposed.props && currentComposed.props.id) this.tabView.addTab(this.canvas.id, currentComposed.props.id);
+			else this.tabView.addTab(this.canvas.id,"canvas"+this.tabView.tabs.length);
 			Jel.Canvas = this.canvas;
 			this.changePage(this.canvas);	
       },
@@ -197,7 +198,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			//Codemirror doesn't refresh its context after changes, so we do manually
 			this.dslView.refresh();
 		}
-		else console.log("You have to configure an xsd file and at least a base file that will wrap your code")
+		else console.log("You have to configure an xsd file and at least a base file that will wrap your code");
       },
 
       saveFile: function(){
@@ -289,6 +290,7 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			$('#anteprima').empty();
 			this.anteprima = new anteprimaView();
 			$('#anteprima').append($(this.anteprima.el));
+
 			this.anteprima.arrange(this.canvasShapes, this.connections);
 		},
 
