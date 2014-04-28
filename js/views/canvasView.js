@@ -79,6 +79,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		var context = currentContext || this;			
 		//if the add shape is triggered by an event
 		if(e){
+			if(!shape) return; //draggin a fake image
 			shape.x = e.layerX;//-context.paper.canvas.getBoundingClientRect().left;
 			shape.y = e.layerY;//-context.paper.canvas.getBoundingClientRect().top;
 		}
@@ -102,7 +103,10 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		currentShape.width = shape.width;
 		currentShape.height = shape.height;
 		
-		if(shape.props) currentShape.props['id'] = shape.props['id'];
+		if(shape.props){
+			if(!currentShape.props) currentShape.props = new Object();
+			currentShape.props['id'] = shape.props['id'];
+		}
 
 		$(currentShape.el).on("removeShape", function(event, id){
 			event.target.menu.hide(); //hide the current context menu 

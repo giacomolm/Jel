@@ -39,10 +39,10 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
             var i,temp_breadth=0, curr_breadth = breadth || 0;
             for(i=0; i<shapes.length; i++){
 
-                var level = this.getLevel(shapes.at(i).id);
-
+                var level = this.getLevel(shapes.at(i).id) || 0;
+                
                 //Calculating the width depending the parent position, if it exists
-                if(parent) level = parent.attrs.width + parent.level+30;
+                if(parent) level = Math.max(parent.attrs.width + parent.level+30, level);
                 
                 var currentShape = this.paper.image(shapes.at(i).url, level, (90*(temp_breadth+curr_breadth+i)), shapes.at(i).width || 86 , shapes.at(i).height || 54);
                 //setting the original id

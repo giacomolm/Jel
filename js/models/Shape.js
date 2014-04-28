@@ -41,8 +41,11 @@ define(["jquery", "underscore", "backbone", "jel"],
       },
       
       setProperties: function(props){
-      	if(props) this.props = _.clone(props);
-		else if(Jel.xsdFile){		
+      	//if props are explicitily passed, are used
+      	if(props) {
+      		this.props = _.clone(props); 
+      	}
+		else if(Jel.xsdFile){ //otherwise we check if an XSD file was passed
 				var result= xsdAttr.getAttributes(Jel.xsdFile,this.metaelement);
 				this.props = new Object();
 				for(var propName in result) {

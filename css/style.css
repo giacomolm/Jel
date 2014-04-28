@@ -70,6 +70,7 @@ body {
 #basepalette{
 	height : 220px;
 	overflow-y: hidden;
+	overflow-x: hidden;
 	position:relative;
 	background-color: #FFF;
 	padding-top: 3px;
@@ -79,6 +80,7 @@ body {
 	height : 220px;
 	position:relative;
 	overflow-y: hidden;
+	overflow-x: hidden;
 	background-color: #FFF;
 	padding-top: 3px;
 }
