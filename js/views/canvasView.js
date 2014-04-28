@@ -133,7 +133,7 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "models/Sha
 		shapeEl.setDblclick(context.composedHandler);
 		//shape text related to canvas element
 		var shapeText;
-		if(shapes.props){
+		if(shape.props){
 			if(shape.props.id)	shapeText = context.paper.shapeText(shape.name+": "+shape.props.id, shape.x, shape.y, shapeEl, context);
 			else 	shapeText = context.paper.shapeText(shape.name, shape.x, shape.y, shapeEl, context);
 		}
