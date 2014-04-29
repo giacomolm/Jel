@@ -92,7 +92,6 @@ define(["jquery", "underscore", "backbone", "jel"],
 
       updateProp: function(propName, propValue){
       	this.props[propName] = propValue;
-
       	$(this.el).trigger("propsChanged",[propName, propValue]);
       },
 

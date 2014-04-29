@@ -143,8 +143,10 @@ define(["jquery", "underscore", "backbone", "collections/Shapes", "collections/C
 			//add this canvas to the current collection of existing canvas
 			this.contents[this.canvas.id] = this.canvas;
 			currentComposed.canvas = this.canvas.id
+			//if the canvas we're creating has an id props, we use it for the tab name
 			if(currentComposed.props && currentComposed.props.id) this.tabView.addTab(this.canvas.id, currentComposed.props.id);
-			else this.tabView.addTab(this.canvas.id,"canvas"+this.tabView.tabs.length);
+			else this.tabView.addTab(this.canvas.id,"canvas"+this.tabView.getHlength()); //otherwise we use 'canvas#'
+			//Setting as current main canvas
 			Jel.Canvas = this.canvas;
 			this.changePage(this.canvas);	
       },

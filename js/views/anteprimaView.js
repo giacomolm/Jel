@@ -43,8 +43,8 @@ define(["jquery", "underscore", "backbone", "ractive", "raphaelext", "jel", "fil
                 
                 //Calculating the width depending the parent position, if it exists
                 if(parent) level = Math.max(parent.attrs.width + parent.level+30, level);
-                
-                var currentShape = this.paper.image(shapes.at(i).url, level, (90*(temp_breadth+curr_breadth+i)), shapes.at(i).width || 86 , shapes.at(i).height || 54);
+                var currentText = this.paper.text(level+20, (90*(temp_breadth+curr_breadth+i))+5, shapes.at(i).name + ((shapes.at(i).props && shapes.at(i).props.id) ? ":"+shapes.at(i).props.id : ""));
+                var currentShape = this.paper.image(shapes.at(i).url, level, (90*(temp_breadth+curr_breadth+i))+12, shapes.at(i).width || 86 , shapes.at(i).height || 54);
                 //setting the original id
                 currentShape.id = shapes.at(i).id;
                 //setting the level, indicating the margin left, in order to retrieve it later

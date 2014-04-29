@@ -12,6 +12,8 @@ define(["jquery", "underscore", "backbone", "ractive", "views/tabItemView", "tex
         initialize: function (){	
 			this.tabs = new Array();
 			this.history = new Array();
+			//history length keep the number of the total tabs opened, in order to assign a unique name
+			this.hlength = 0;
 			this.render();
         },
 	
@@ -20,6 +22,7 @@ define(["jquery", "underscore", "backbone", "ractive", "views/tabItemView", "tex
 		addTab: function(id, type){
 			this.tabs[id] = {id: id, name: type};
 			this.history.unshift(parseInt(id));
+			this.hlength++;
 			this.render(id);
 		},
 		
@@ -96,6 +99,10 @@ define(["jquery", "underscore", "backbone", "ractive", "views/tabItemView", "tex
 
 		getLatestTab: function(){
 			return this.history[0];
+		},
+
+		getHlength: function(){
+			return this.hlength;
 		},
 
         render: function (id) {        	
