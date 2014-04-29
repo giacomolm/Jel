@@ -14,65 +14,6 @@
 
 	<link rel="stylesheet" href="css/demo.css" type="text/css" media="screen">
 
-	<script type="text/javascript" src="lib/jel/jel.js"></script>
-	<script data-main="js/main" src="lib/require/require.js"></script>
-
-	<script>
-		Jel.fn.init = function(){
-
-			//Setting the xsd file in order to do validation
-			try{
-			  Jel.attachXSD('schema/camel.xsd');
-			}
-			catch(err){
-			  console.log("Problems with http xml request");
-			}
-		
-			//Adding shapes to palette
-			var shape1 = new Jel.Shape();
-			shape1.setImage("img/me.gif");
-			shape1.setName("From");
-			shape1.setMetaelement("from");
-			shape1.setPosition(70,70);		
-			Jel.paletteShapes.addShape(shape1);		
-			
-			//Adding shapes to canvas (instead dropping it graphically)
-			instance1 = Jel.Canvas.addShape(shape1);	
-			
-			var shape2 = new Jel.Shape();
-			shape2.setImage("img/mt.gif");
-			shape2.setName("Translator");
-			shape2.setPosition(240,140);
-			shape2.setMetaelement('transform');	
-			shape2.setAsComposed();
-			
-			Jel.paletteShapes.addShape(shape2);
-			
-			instance2 = Jel.Canvas.addShape(shape2);
-			
-			var shape3 = new Jel.Shape();
-			shape3.setImage("img/me.gif");
-			shape3.setName("To");
-			shape3.setPosition(400,220);
-			shape3.setMetaelement('to');
-			
-			Jel.paletteShapes.addShape(shape3);
-			
-			instance3 = Jel.Canvas.addShape(shape3);
-			
-			//Adding connections between shapes (position matters)
-			Jel.Canvas.connect(instance1, instance2);
-			
-			var shape4 = new Jel.Shape();
-			shape4.setImage("img/cbr.gif");
-			shape4.setName("Router");
-			shape4.setMetaelement('choice');
-			Jel.paletteShapes.addShape(shape4);
-			//this element is a composition of different shape
-			shape4.setAsComposed();
-			
-		}
-	</script>
   </head>
 <body>
 <div class="wrapper">
@@ -92,25 +33,45 @@
 	        <br><br>
 	        <h3>What you can do with Jel</h3>
 	        <p>Define your own palette</p>
-	        <p>Attach your XSD</p>
-	        <p>Convert into a DSL (based on XML)*</p>
-	        <p>Save/Load your draw*</p>
+	        <p>Attach an XSD</p>
+	        <p>Convert your draw in a DSL</p>
+	        <p>Save/Load your draw</p>
 	        <p>Live Validation*</p>
 	        <h5>* Partially or Not still supported </h5>
         </div>
       </header>
-      <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Javascript graphical Editor that generates dsL</h3>Drag'n drop shapes on left into the canvas
-	<div>
-		<div id="menu"></div><br>
-		<div id="palette"><h4>Palette</h4></div>
-		<div id="tab"></div>
-		<div id="container">
-			<div id="canvas" ondragover="event.preventDefault()"></div>
-			<div id="properties"></div>
-		</div>
-	</div>
+      <section style="text-align:center">
+		<p><h2><a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Javascript graphical Editor that generates dsL</h2></p>
+
+		<p><h3>What is?</h3></p>
+		<p>Jel is a web based application that <u>helps you to visualize your <a href="en.wikipedia.org/wiki/Domain-specific_language‎">DSL</a></u>. It's entirely written in Javascript
+			and can be easily embedded in your web app. Moreover, Jel is able to generate small prortion of code starting from a draw. 
+		</p>
+
+		<p><h3>Why?</h3></p>
+		<p>A lot of times we need to draw something and, at the same time, we need to associate data with draw. <b>Jel</b> represent an attempt, in the web environment, to join the two world.</p>
+
+		<p><h3>How?</h3></p>
+		<p > 
+			First, you can define easily your palette: you can choose shapes that will compose your draw. At the same time you can embed shapes with meta-data.<br>
+			Optionally, you can attach an XSD: in this case your shapes can be associated to meta-element, inheriting attributes and constraints.<br>
+			Once you decide your shapes, you can drag'n drop them into a canvas: you can move them, join them with an arrow, you can explode composed shapes, specify meta data and so on. <br>
+			At the and, if you have specified an xsd, you can convert you shapes in a DSL instance and check its validity.
+	    </p>
+
+	    <p><h3>Demo</h3></p>
+		<p> 
+			<p>
+				<a href="https://camel.apache.org/">Apache Camel™</a> is a versatile open-source integration framework based on known Enterprise Integration Patterns. With Jel, we provided a basic instruments
+				to edit graphically camel routes based on Spring DSL<br>
+				<input type="button" value="Apache Camel" onclick="window.open('http://giacomolm.github.io/Jel.Camel/','Jel.Camel','height=680,width=1003, location=0')" />
+			</p>
+			<p>
+				Connector Algebra is an high-level algebra for reasoning about protocol mis-matches. <br>
+				<input type="button" value="Connector Algebra" onclick="window.open('http://giacomolm.github.io/Jel.Cabac/','Jel.Cabac','height=680,width=1003, location=0')" />
+			</p>
+	    </p>
+
 
 <!--<h3>
 <a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
