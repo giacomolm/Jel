@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Jel by giacomolm</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+	<link rel="stylesheet" href="css/demo.css" type="text/css" media="screen">
+
+  </head>
+<body>
+<div class="wrapper">
+      <header>
+        <div>
+	        <h1>Jel</h1>
+	        <p>Generate your DSL, graphically.</p>
+
+	        <p class="view"><a href="https://github.com/giacomolm/Jel">View the Project on GitHub <small>giacomolm/Jel</small></a></p>
+
+
+	        <ul>
+	          <li><a href="https://github.com/giacomolm/Jel/zipball/master">Download <strong>ZIP File</strong></a></li>
+	          <li><a href="https://github.com/giacomolm/Jel/tarball/master">Download <strong>TAR Ball</strong></a></li>
+	          <li><a href="https://github.com/giacomolm/Jel">View On <strong>GitHub</strong></a></li>
+	        </ul>
+	        <br><br>
+	        <p><h3><a href="./index.html">Jel</a></h3></p>
+	        <p><h3><a href="#getting">Getting Started</a></h3></p>
+	        <p><h3><a href="#palette">Palette</a></h3></p>
+	        <p><h3><a href="#shape">Shape</a></h3></p>
+	        <p><h3><a href="#canvas">Canvas</a></h3></p>
+
+        </div>
+      </header>
+      <section style="text-align:center">
+		<p><a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>
+			<h2>Javascript graphical Editor that generates dsL</h2>
+			<h3>Documentation</h3>
+		</p>
+
+		<a name="getting"><h3>Getting Started</h3></a>
+		<p>Jel uses well known javascript framework, like <u>Require</u> and <u>Backbone</u>. My suggestion is to use the editor in a separate window: if you want to embed the editor in your page,
+			you have to copy in a right way all the index.html code in the Jel root folder. Essentially, in your page you have to copy three main part. If you fork this project, you don't need this step<br>
+		</p>
+			CSS
+			<pre style="text-align:left">
+				<code>
+<span><</span>link rel="stylesheet" href="css/codemirror.css" type="text/css" media="screen"<span>></span>
+<span><</span>link rel="stylesheet" href="css/bootstrap.css" type="text/css" media="screen"<span>></span>
+<span><</span>link rel="stylesheet" href="css/jstree/jstree.min.css" type="text/css" media="screen"<span>></span>
+<span><</span>link rel="stylesheet" href="css/style.css" type="text/css" media="screen"<span>></span>
+<span><</span>link rel="stylesheet" href="css/scrollbar.css" type="text/css" media="screen"<span>></span>
+<span><</span>link rel="stylesheet" href="css/raphael.pan-zoom.css" type="text/css" media="screen"<span>></span>
+				</code>
+			</pre>
+
+			Javascript
+			<pre style="text-align:left">
+				<code>
+<span><</span>script type="text/javascript" src="lib/jel/jel.js"><span><</span>/script>
+<span><</span>script data-main="js/main" src="lib/require/require.js"><span><</span>/script>
+				</code>
+			</pre>
+
+			HTML
+			<pre style="text-align:left">
+				<code>
+<span><</span>div id="menu"><span><span><</span>/div>
+<span><</span>div id="dialog"><span><</span>/div>
+<span><</span>div id="notification"><span><</span>/div>
+<span><</span>div id="middle">
+	<span><</span>div id="palette">
+		<span><</span>div id="paletteheader"><span><</span>h5>Palette<span><</span>/h5><span><</span>/div>
+	<span><</span>/div>
+	<span><</span>div id="tab"><span><</span>/div>
+	<span><</span>div id="container">
+		<span><</span>div id="main" ondragover="event.preventDefault()"><span><</span>/div>
+		<span><</span>div id="dsl"><span><</span>/div>
+	<span><</span>/div>
+	<span><</span>div id="rightMenu">
+		<span><</span>div id="treeheader"><span><</span>h5>Tree<span><</span>/h5><span><</span>/div>
+		<span><</span>div id="tree" class="jstree jstree-1 jstree-default jstree-default-responsive"><span><</span>/div>
+		<span><</span>div id="properties"><span><</span>/div>
+		<span><</span>div id="anteprimaheader"><span><</span>h5>Anteprima<span><</span>/h5><span><</span>/div>
+		<span><</span>div id="anteprima"><span><</span>/div>
+	<span><</span>/div>
+<span><</span>/div>
+				</code>
+			</pre>
+
+		<p>Naturally, you have to copy all the required folder in the same of your index.html.</p>
+
+		<a name="palette"><h3>Palette</h3></a>
+		<p>Once all files are copied, you can start with the definition of your palette. Jel require that the definition has to be made in the init method: so we have to override this method, in a separate javascript file or directly in the index.html<br>
+		If you have some problem in the init definition, you can refer to existing forks, like the <a href="https://github.com/giacomolm/Jel.Camel/blob/master/index.html"><u>Camel</u></a> one</p>
+			<pre style="text-align:left">
+				<code>
+<span><</span>script>
+	Jel.fn.init = function(){
+		//Here you can define your shapes, connections and  enable Jel options
+	}
+<span><</span>/script>
+				</code>
+			</pre>
+
+		<a name="shape"><h3>Shape</h3></a>
+		<p>Jel is composed of two main concept, Shape and Connection. Shape is a generic term that is used to refer to your palette items. If you want to add a shape in the palette section, follw </p>
+			<pre style="text-align:left">
+				<code>
+var shape = new Jel.Shape();
+shape.setImage(url); //setting the image url starting from the folder containing this script
+shape.setName("elementName"); //the name will appear with the image
+Jel.paletteShapes.addShape(shape); //Shape is added in the palette	
+				</code>
+			</pre>
+			<p>Shapes can be of two main types: base or composed. Composed shapes are the ones that can be explored, so that contains other shapes. To explore a composed shape, make a double click on it: a new tab will open. If you want to set a shape composed, follow this</p>
+			<pre style="text-align:left">
+				<code>
+.
+shape.setAsComposed();
+.
+Jel.paletteShapes.addShape(shape);
+				</code>
+			</pre>
+
+			<a name="shape"><h3>Canvas</h3></a>
+		<p>Jel is based on one of the most important SVG library, Raphael JS (yeah it's not a canvas). All the operation with raphael can be performed directly on the app, like drag'n drop of shapes. However, can be useful adding shape inside a script. </p>
+			<pre style="text-align:left">
+				<code>
+var shape = new Jel.Shape();
+.
+.
+shape.setPosition(240,140);
+.
+.
+instance = Jel.Canvas.addShape(shape);
+				</code>
+			</pre>
+
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/giacomolm">giacomolm</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+
+	    
+	<script src="javascripts/scale.fix.js"></script>
+	
+</body>
+</html>
