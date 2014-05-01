@@ -36,6 +36,8 @@
 	        <p><h3><a href="#palette">Palette</a></h3></p>
 	        <p><h3><a href="#shape">Shape</a></h3></p>
 	        <p><h3><a href="#canvas">Canvas</a></h3></p>
+	        <p><h3><a href="#connection">Connection</a></h3></p>
+	        <p><h3><a href="#dsl">DSL</a></h3></p>
 
         </div>
       </header>
@@ -117,10 +119,11 @@
 var shape = new Jel.Shape();
 shape.setImage(url); //setting the image url starting from the folder containing this script
 shape.setName("elementName"); //the name will appear with the image
+shape.setDimension(84,54); //set the deafault dimension of a palette shape
 Jel.paletteShapes.addShape(shape); //Shape is added in the palette	
 				</code>
 			</pre>
-			<p>Shapes can be of two main types: base or composed. Composed shapes are the ones that can be explored, so that contains other shapes. To explore a composed shape, make a double click on it: a new tab will open. If you want to set a shape composed, follow this</p>
+			<p>Shapes can be of two main types: base or composed. Composed shapes are the ones that can be explored, so that contain other shapes. To explore a composed shape, make a double click on it: a new tab will open. If you want to set a shape composed, follow this</p>
 			<pre style="text-align:left">
 				<code>
 .
@@ -130,7 +133,7 @@ Jel.paletteShapes.addShape(shape);
 				</code>
 			</pre>
 
-			<a name="shape"><h3>Canvas</h3></a>
+		<a name="canvas"><h3>Canvas</h3></a>
 		<p>Jel is based on one of the most important SVG library, Raphael JS (yeah it's not a canvas). All the operation with raphael can be performed directly on the app, like drag'n drop of shapes. However, can be useful adding shape inside a script. </p>
 			<pre style="text-align:left">
 				<code>
@@ -140,9 +143,57 @@ var shape = new Jel.Shape();
 shape.setPosition(240,140);
 .
 .
-instance = Jel.Canvas.addShape(shape);
+var instance = Jel.Canvas.addShape(shape);
 				</code>
 			</pre>
+
+		<a name="connection"><h3>Connection</h3></a>
+		<p>Once canvas is defined and some shapes have been added, we can connect them. As we said in the shape paragraph, Connection is one of the two most important concept in Jel. Connections between elements are oriented: in this way, an hierarchy between shapes is established.  </p>
+			<pre style="text-align:left">
+				<code>
+.
+var instance1 = Jel.Canvas.addShape(shape1);
+.
+var instance2 = Jel.Canvas.addShape(shape2);
+.
+Jel.Canvas.connect(instance1, instance2);
+				</code>
+			</pre>
+
+		<a name="dsl"><h3>DSL</h3></a>
+		<p>As we said previously, one main goal of Jel is to keep aligned two worlds: the graphical one and the textual one. In other words, under the picture there is a well structured textual representation, that can be processed. <br>The idea is the following: <b><u>why not use a xml schema definition in order to map shapes with metalement</u>?</b> In this way, shapes can inherit properties and constraints of the meta-element. In order to do this, we have to:  
+			<ul>
+				<li>attach an XSD containing elements definition;</li>
+				<li>associate the shape to the right metalement</li>
+			</ul>
+		<pre style="text-align:left">
+			<code>
+Jel.fn.init = function(){
+
+	//First attach the right xsd
+	try{
+		Jel.attachXSD('schema_folder/schema_file.xsd');
+	}catch(err){
+		console.log(err);
+	}
+	.
+	shape.setMetaelement("metaelement_name");
+	Jel.paletteShapes.addShape(shape);	
+	.
+}
+			</code>
+		</pre>
+		<p>When an xsd is attached to Jel, users can benifits also of the conversion functionaly: it means that the picture can be converted into a textual representation, obtaining a DSL instance. During the conversion phase, a validation step is applied: if something goes wrong, an error message will appear.  In order to ensure the validity of the generation result, we have to specify additional information</p>
+		<pre style="text-align:left">
+			<code>
+try{
+	.
+	Jel.setBaseFile('xml/baseFile.xml'); // setting the base structure of the generated code, like the xml definition 
+	Jel.setNamespace('http://camel.apache.org/schema/spring'); //setting the namespace of the generate code
+	Jel.setBaseElement('base_el'); //Set the base element that will wrap the generated code
+}
+			</code>
+		</pre>
 
       </section>
       <footer>
